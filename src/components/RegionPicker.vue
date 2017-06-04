@@ -6,22 +6,22 @@
 <script type="text/javascript">
 
     export default {
-        name:'regionPicker',
-        data() {
-            return {
-                province: '广东', // you can set initial value or not.
-                city: 440100, // by code or name.
-                district: ''
-            }
-        },
-        components: {
-
-        },
-        methods: {
-           
-        },
-        mounted() {
-
+      name: 'regionPicker',
+      data () {
+        return {
+          province: '广东', // you can set initial value or not.
+          city: 440100, // by code or name.
+          district: ''
         }
+      },
+      components: {
+
+      },
+      methods: {
+    
+      },
+      mounted () {
+
+      }
     }
 </script>

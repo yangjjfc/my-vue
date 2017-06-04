@@ -23,11 +23,20 @@ module.exports = {
   },
   dev: {
     env: require('./dev.env'),
-    port: 8080,
+    port: 8088,
     autoOpenBrowser: true,
     assetsSubDirectory: 'static',
-    assetsPublicPath: '/',
-    proxyTable: {},
+    assetsPublicPath: '/', 
+    proxyTable: {
+      '/gateway': {
+                target: 'http://scms.dev.cloudyigou.com',
+                changeOrigin: true,
+                logLevel:'debug',
+                pathRewrite: {
+                    //'^gateway':''
+                }
+            }
+    },
     // CSS Sourcemaps off by default because relative paths are "buggy"
     // with this option, according to the CSS-Loader README
     // (https://github.com/webpack/css-loader#sourcemaps)

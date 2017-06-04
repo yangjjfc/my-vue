@@ -7,19 +7,16 @@ exports.assetsPath = function (_path) {
     ? config.build.assetsSubDirectory
     : config.dev.assetsSubDirectory
   return path.posix.join(assetsSubDirectory, _path)
-}
-
+} 
 exports.cssLoaders = function (options) {
   options = options || {}
-
   var cssLoader = {
     loader: 'css-loader',
     options: {
       minimize: process.env.NODE_ENV === 'production',
       sourceMap: options.sourceMap
     }
-  }
-
+  } 
   // generate loader string to be used with extract text plugin
   function generateLoaders (loader, loaderOptions) {
     var loaders = [cssLoader]
@@ -30,8 +27,7 @@ exports.cssLoaders = function (options) {
           sourceMap: options.sourceMap
         })
       })
-    }
-
+    } 
     // Extract CSS when that option is specified
     // (which is the case during production build)
     if (options.extract) {
@@ -43,7 +39,6 @@ exports.cssLoaders = function (options) {
       return ['vue-style-loader'].concat(loaders)
     }
   }
-
   // https://vue-loader.vuejs.org/en/configurations/extract-css.html
   return {
     css: generateLoaders(),
@@ -55,7 +50,6 @@ exports.cssLoaders = function (options) {
     styl: generateLoaders('stylus')
   }
 }
-
 // Generate loaders for standalone style files (outside of .vue)
 exports.styleLoaders = function (options) {
   var output = []

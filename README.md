@@ -31,7 +31,9 @@ For detailed explanation on how things work, checkout the [guide](http://vuejs-t
 
 > 
 
-
+## eslint 代码检测工具
+在visual下使用时,在文件-设置-visualcode下修改报错后自动格式化文件
+更目录下.eslintigonre文件中可配置需要忽略的文件,不然很多引用的插件有报错 
 
 # 项目布局
 

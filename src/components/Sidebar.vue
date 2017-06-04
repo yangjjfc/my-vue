@@ -16,23 +16,23 @@
 <script>
 import menu from '../data/menu.json'
 export default {
-    name: 'sidebar',
-    data () {
-        return {
-            menuList : menu,
-            clientHeight:''
-        }
-    },
-    mounted(){
-        this.clientHeight=document.body.clientHeight-50;
-        console.log(this.clientHeight);
-    },
-    methods :{
-        showSon(item){
-            this.$set(item,'show',!item.show)
-        }
+  name: 'sidebar',
+  data () {
+    return {
+      menuList: menu,
+      clientHeight: ''
     }
-    
+  },
+  mounted () {
+    this.clientHeight = document.body.clientHeight - 50
+    console.log(this.clientHeight)
+  },
+  methods: {
+    showSon (item) {
+      this.$set(item, 'show', !item.show)
+    }
+  }
+
 }
 </script>
 

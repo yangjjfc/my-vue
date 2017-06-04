@@ -12,7 +12,8 @@
     }
 </script>
 
-<style lang="scss">
+<style lang="scss" >
+    @import 'assets/style/common';
     #app {
         font-family: 'Avenir', Helvetica, Arial, sans-serif;
         -webkit-font-smoothing: antialiased;
@@ -27,4 +28,4 @@
     .router-fade-enter, .router-fade-leave-active {
         opacity: 0;
     }
-</style>
+</style>  

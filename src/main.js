@@ -20,3 +20,4 @@ new Vue({ // eslint-disable-line no-new
   router,
   render: h => h(App)
 })
+

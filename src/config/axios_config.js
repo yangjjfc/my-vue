@@ -1,4 +1,4 @@
-var config={
+var config = {
   // `url` 是用于请求的服务器 URL
   url: '/api',
 
@@ -7,7 +7,7 @@ var config={
 
   // `baseURL` 将自动加在 `url` 前面，除非 `url` 是一个绝对 URL。
   // 它可以通过设置一个 `baseURL` 便于为 axios 实例的方法传递相对 URL
-  //baseURL: 'https://some-domain.com/api/',
+  // baseURL: 'https://some-domain.com/api/',
 
   // `transformRequest` 允许在向服务器发送前，修改请求数据
   // 只能用在 'PUT', 'POST' 和 'PATCH' 这几个请求方法
@@ -15,14 +15,14 @@ var config={
   transformRequest: [function (data) {
     // 对 data 进行任意转换处理
 
-    return data;
+    return data
   }],
 
   // `transformResponse` 在传递给 then/catch 前，允许修改响应数据
   transformResponse: [function (data) {
     // 对 data 进行任意转换处理
 
-    return data;
+    return data
   }],
 
   // `headers` 是即将被发送的自定义请求头
@@ -66,20 +66,20 @@ var config={
   // `auth` 表示应该使用 HTTP 基础验证，并提供凭据
   // 这将设置一个 `Authorization` 头，覆写掉现有的任意使用 `headers` 设置的自定义 `Authorization`头
   auth: {
-      'X-Requested-With':'XMLHttpRequest',
-      'Content-Type':'application/json',
-      'jtoken':'jtoken',
-      'apiName':'apiName'
+    'X-Requested-With': 'XMLHttpRequest',
+    'Content-Type': 'application/json',
+    'jtoken': 'jtoken',
+    'apiName': 'apiName'
   },
 
   // `responseType` 表示服务器响应的数据类型，可以是 'arraybuffer', 'blob', 'document', 'json', 'text', 'stream'
   responseType: 'json', // 默认的
 
   // `xsrfCookieName` 是用作 xsrf token 的值的cookie的名称
-  //xsrfCookieName: 'XSRF-TOKEN', // default
+  // xsrfCookieName: 'XSRF-TOKEN', // default
 
   // `xsrfHeaderName` 是承载 xsrf token 的值的 HTTP 头的名称
-  //xsrfHeaderName: 'X-XSRF-TOKEN', // 默认的
+  // xsrfHeaderName: 'X-XSRF-TOKEN', // 默认的
 
   // `onUploadProgress` 允许为上传处理进度事件
 //   onUploadProgress: function (progressEvent) {
@@ -96,17 +96,17 @@ var config={
 
   // `validateStatus` 定义对于给定的HTTP 响应状态码是 resolve 或 reject  promise 。如果 `validateStatus` 返回 `true` (或者设置为 `null` 或 `undefined`)，promise 将被 resolve; 否则，promise 将被 rejecte
   validateStatus: function (status) {
-    return status >= 200 && status < 300; // 默认的
+    return status >= 200 && status < 300 // 默认的
   },
 
   // `maxRedirects` 定义在 node.js 中 follow 的最大重定向数目
   // 如果设置为0，将不会 follow 任何重定向
-  maxRedirects: 5, // 默认的
+  maxRedirects: 5 // 默认的
 
   // `httpAgent` 和 `httpsAgent` 分别在 node.js 中用于定义在执行 http 和 https 时使用的自定义代理。允许像这样配置选项：
   // `keepAlive` 默认没有启用
-  //httpAgent: new http.Agent({ keepAlive: true }),
-  //httpsAgent: new https.Agent({ keepAlive: true }),
+  // httpAgent: new http.Agent({ keepAlive: true }),
+  // httpsAgent: new https.Agent({ keepAlive: true }),
 
   // 'proxy' 定义代理服务器的主机名称和端口
   // `auth` 表示 HTTP 基础验证应当用于连接代理，并提供凭据
@@ -125,3 +125,5 @@ var config={
 //   cancelToken: new CancelToken(function (cancel) {
 //   })
 }
+
+export default config
