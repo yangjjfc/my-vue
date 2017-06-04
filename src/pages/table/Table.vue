@@ -2,43 +2,70 @@
     <section>
         <!--工具条-->
         <el-row>
-            <el-col span="24" class="toolbar">
-                <el-form :inline="true" :model="formInline" class="demo-form-inline">
-                    <el-form-item label="处理结果 : ">
+            <el-col :span="24" class="toolbar">
+                <el-form :inline="true"  class="demo-form-inline">
+                    <el-form-item label="状态 : ">
                         <el-select v-model="from.result.value" placeholder="请选择">
                             <el-option v-for="item in from.result.options" :label="item.label" :value="item.value" :key="item.value" ></el-option>
                         </el-select>
                     </el-form-item>
                     <el-form-item >
-                        <el-select v-model="from.result.value" placeholder="请选择">
-                            <el-option v-for="item in from.type.options" :label="item.label" :value="item.value" :key="item.value" ></el-option>
-                        </el-select>
-                    </el-form-item>
-                    <el-form-item >
-                        <el-input placeholder="消费方" v-model="from.search_subscriber_appcode" class="w100"></el-input>
-                    </el-form-item>
-                    <el-form-item >
-                        <el-input placeholder="接口编码/接口名称/请求参数/返回结果" v-model="from.search_interface_code"></el-input>
+                        <el-input placeholder="客户名称" v-model="from.keywords" class="w300"></el-input>
                     </el-form-item>
                     <el-form-item>
-                        <el-button type="primary" @click="getList">查询</el-button>
+                        <el-button type="primary" @click="getList({pageIndex:1})">查询</el-button>
                     </el-form-item>
                     <el-form-item>
                         <el-button @click="reset">重置</el-button>
                     </el-form-item>
                 </el-form>
             </el-col>
-            <el-col span="24">
-                <Table border :columns="columns" :data="data1" style="width:100% !important"></Table>
+            <el-col :span="24">
+             <el-table ref="multipleTable"
+    :data="tableDate"
+    border
+    tooltip-effect="dark"
+    style="width: 100%"
+    >
+    <el-table-column
+      type="selection"
+      width="55">
+    </el-table-column>
+    <el-table-column
+      label="客户名称"
+      width="120" prop="customerName">
+      
+    </el-table-column>
+    <el-table-column
+      prop="registNum"
+      label="注册证"
+      width="120">
+    </el-table-column>
+    <el-table-column
+      prop="factoryNum"
+      label="生产厂家"
+      show-overflow-tooltip>
+    </el-table-column>
+     <el-table-column
+     
+      label="操作"
+      show-overflow-tooltip>
+      <template scope="scope">
+        <el-button @click="open" type="text" size="small">查看</el-button>
+        <el-button type="text" size="small">编辑</el-button>
+      </template>
+    </el-table-column>
+  </el-table>
             </el-col>
-            <el-col span="24" class="toolbar">
+            <el-col :span="24" class="toolbar">
+                <pagination :total="total" :pageSize="pageSize" :pageIndex="pageIndex"  @getList="getList"></pagination>
             </el-col>
-            {{count}}
         </el-row>
     </section>
 </template>
 
 <script>
+import pagination from '@/components/pagination'
 export default {
   name: 'table',
   data () {
@@ -47,216 +74,100 @@ export default {
       total: 0,
       pageSize: 20,
       pageIndex: 1,
-      listLoading: false,
-      addLoading: false,
       from: {
         result: {
-          options: [{
-            value: '1',
-            label: '成功'
-          }, {
-            value: '2',
-            label: '失败'
+          options: [ {
+            value: -1,
+            label: '全部'
+          },
+          {
+            value: 3,
+            label: '待审核'
+          },
+          {
+            value: 1,
+            label: '已通过'
+          },
+          {
+            value: 4,
+            label: '被拒绝'
+          },
+          {
+            value: 6,
+            label: '被解除'
           }],
-          value: '1'
+          value: -1
         },
-        type: {
-          options: [{
-            value: '-1',
-            label: '事件类型'
-          }, {
-            value: '供应链增量数据拉取-保存',
-            label: '供应链增量数据拉取-保存'
-          }, {
-            value: 'ERP增量数据拉取-保存',
-            label: 'ERP增量数据拉取-保存'
-          }, {
-            value: '全量数据拉取-保存',
-            label: '全量数据拉取-保存'
-          }, {
-            value: '批量数据拉取',
-            label: '批量数据拉取'
-          }, {
-            value: '批量数据上传',
-            label: '批量数据上传'
-          }, {
-            value: '批量数据上传(发布)',
-            label: '批量数据上传(发布)'
-          }, {
-            value: '批量数据上传(消费)',
-            label: '批量数据上传(消费)'
-          }, {
-            value: '业务状态回写',
-            label: '业务状态回写'
-          }, {
-            value: '消息分发(发布)',
-            label: '消息分发(发布)'
-          }, {
-            value: '消息分发(消费)',
-            label: '消息分发(消费)'
-          }],
-          value: '-1'
-        },
-        date: {
-          startTime: '',
-          endTime: ''
-        },
-        search_interface_code: '',
-        search_subscriber_appcode: ''
+        keywords: ''
       },
-      startTime: '',
-      endTime: '',
-      columns: [{
-        title: '序号',
-        key: 'num',
-        width: 80,
-        align: 'center'
-      },
-      {
-        title: '消费方',
-        key: 'subscriber_appcode'
-      },
-      {
-        title: '企业编号',
-        key: 'company_no'
-      }, {
-        title: '接口编码',
-        key: 'interface_code'
-      }, {
-        title: '接口名称',
-        key: 'interface_name'
-      }, {
-        title: '调用时间',
-        key: 'create_time'
-      }, {
-        title: '处理结果',
-        key: 'result'
-      }, {
-        title: '耗时(ms)',
-        key: 'interval_time'
-      }, {
-        title: '操作',
-        key: 'operate'
-      }],
-      data1: []
-
+      tableDate: []
     }
   },
   computed: {
-    count: function () {
-      return this.$store.state.count
-    }
+
   },
   methods: {
-    getList: function (pageIndex = this.pageIndex, pageSize = this.pageSize) {
-      var self = this
-      this.Http.post('serviceoi.auditAPI.queryAuditLog',
+
+    getList: function ({pageIndex = this.pageIndex, pageSize = this.pageSize}) {
+      let self = this
+      this.Http.post('scm.supplier.queryCustomers',
         {
-          'auditLog': {
-            'interface_code': this.from.search_interface_code,
-            'result': this.from.result.value,
-            'event_type': this.from.type.value,
-            'subscriber_appcode': this.from.search_subscriber_appcode,
-            'begin_time': this.startTime,
-            'end_time': this.endTime,
+          'params': {
+            'keywords': this.from.keywords,
+            'orderBy': 'desc',
+            'orderField': 'apply_time',
+            'status': this.from.result.value,
             'pageIndex': pageIndex,
             'pageSize': pageSize
           }
+        }).then(function (re) {
+          console.log(re)
+          self.pageIndex = re.data.pageIndex
+          console.log(self.pageIndex)
+          self.pageSize = re.data.pageSize
+          self.total = re.data.total
+          self.tableDate = re.data.rows
+        //   .map((item, index) => {
+        //     return {
+        //       customerName: item.customerName + '<br/>' + item.applyTime
+        //     }
+        //   })
         })
-                .then(function (re) {
-                  self.data1 = []
-                  self.users = []
-                  re.data.rows.forEach(function (item, index) {
-                    let data = {
-                      num: index + 1 + (pageIndex - 1) * pageSize,
-                      subscriber_appcode: item.subscriber_appcode,
-                      company_no: item.company_no,
-                      interface_code: item.interface_code,
-                      create_time: item.create_time,
-                      result: item.result,
-                      interval_time: item.interval_time,
-                      operate: '<a>12312<a>'
-                    }
-                    self.users.push(data)
-                  })
-                  self.data1 = self.users
-                  self.total = re.data.total
-                })
     },
     reset () {
-      this.from.result.value = '1'
-      this.from.type.value = '-1'
-      this.from.search_interface_code = ''
-      this.from.search_subscriber_appcode = ''
-      this.from.date.startTime = ''
-      this.from.date.endTime = ''
-      this.startTime = ''
-      this.endtTime = ''
-      this.getList()
+      this.pageIndex = 1
+      this.from.keywords = ''
+      this.from.result.value = -1
+      this.getList({pageIndex: '1'})
+    },
+    open () {
+      this.$alert(<h1>'这是一段内容'</h1>, '标题名称', {
+        confirmButtonText: '确定',
+        callback: action => {
+          this.$message({
+            type: 'info',
+            message: `action: ${action}`
+          })
+        }
+      })
     },
         // 时间
     changeTime: function (val) {
-      this.startTime = val[0]
-      this.endTime = val[1]
     }
 
   },
   mounted () {
-    this.getList()
+    this.getList({})
+  },
+  components: {
+    pagination
   }
 }
 
 </script>
 
 <style scoped lang="scss">
-.toolbar {
-    background: #f2f2f2;
-    padding: 10px;
-    margin: 10px 0px;
-    .ivu-form-item {
-        margin-bottom: 0;
-    }
-}
 
-.w100 {
-    width: 100px !important;
-}
-
-.w120 {
-    width: 120px !important;
-}
-
-.w140 {
-    width: 140px !important;
-}
-
-.w160 {
-    width: 160px !important;
-}
-
-.w180 {
-    width: 180px !important;
-}
-
-.w200 {
-    width: 200px !important;
-}
-
-.w220 {
-    width: 220px !important;
-}
-
-.w240 {
-    width: 240px !important;
-}
-
-.w260 {
-    width: 260px !important;
-}
-
-.w280 {
-    width: 280px !important;
-}
 
 .inline {
     display: inline-block;

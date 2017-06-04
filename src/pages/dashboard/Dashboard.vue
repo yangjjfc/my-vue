@@ -21,7 +21,7 @@
 		<el-col :span="24" class="main">
 			<aside :class="collapsed?'menu-collapsed':'menu-expanded'" class="sidebar">
 				<!--导航菜单--> 
-				<el-menu :default-active="$route.path" class="el-menu-vertical-demo" @open="handleopen" @close="handleclose" @select="handleselect" unique-opened router v-show="!collapsed" theme="dark">
+				<el-menu :default-active="$route.path" class="el-menu-vertical-demo"  unique-opened router v-show="!collapsed" theme="dark">
 					<template v-for="(item,index) in menuList" v-if="!item.hidden">
 						<el-submenu :index="index+''" v-if="item.son&&item.son.length>0">
 							<template slot="title">

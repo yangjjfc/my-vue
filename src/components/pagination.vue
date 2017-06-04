@@ -1,6 +1,14 @@
 /**分页插件*/
 <template>
-    <Page :total="total" :page-size="pageSize" @on-change="changePage" @on-page-size-change="changeSize" show-elevator show-sizer show-total></Page>
+    <el-pagination
+      @size-change="changeSize"
+      @current-change="changePage"
+      :current-page="pageIndex"
+      :page-sizes="[10, 20, 30, 40]"
+      :page-size="pageSize"
+      layout="total, sizes, prev, pager, next, jumper"
+      :total="total">
+    </el-pagination>
 </template>
 <script>
     export default {
@@ -11,14 +19,15 @@
         }
       },
         // 需要传的参数
-      props: ['total', 'pageSize'],
+      props: ['total', 'pageSize', 'pageIndex'],
       methods: {
         changePage (page) {
-          this.$emit('getList', page, this.size)
+          console.log(page)
+          this.$emit('getList', {pageIndex: page, pageSize: this.size})
         },
         changeSize (size) {
           this.size = size
-          this.$emit('getList', '1', size)
+          this.$emit('getList', {pageIndex: '1', pageSize: size})
         }
       }
     }

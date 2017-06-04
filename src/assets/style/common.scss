@@ -5,7 +5,6 @@ body, div, span, header, footer, nav, section, aside, article, ul, dl, dt, dd, l
     font-style: normal;
     text-decoration: none;
     border: none;
-    color: #333;
     box-sizing: border-box;
     font-family: "Microsoft Yahei",sans-serif;
     -webkit-tap-highlight-color:transparent;
@@ -95,4 +94,57 @@ html,body{
 
 .paddingTop{
     padding-top: 1.95rem;
+}
+
+.el-form-item{
+margin-bottom: 0;
+}
+
+.toolbar {
+    background: #f2f2f2;
+    padding: 10px;
+    margin: 10px 0px;
+    .ivu-form-item {
+        margin-bottom: 0;
+    }
+}
+
+.w100 {
+    width: 100px !important;
+}
+
+.w120 {
+    width: 120px !important;
+}
+
+.w140 {
+    width: 140px !important;
+}
+
+.w160 {
+    width: 160px !important;
+}
+
+.w180 {
+    width: 180px !important;
+}
+
+.w200 {
+    width: 200px !important;
+}
+
+.w220 {
+    width: 220px !important;
+}
+
+.w240 {
+    width: 240px !important;
+}
+
+.w260 {
+    width: 260px !important;
+}
+
+.w280 {
+    width: 280px !important;
 }

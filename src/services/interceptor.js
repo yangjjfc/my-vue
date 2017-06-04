@@ -1,7 +1,6 @@
 ﻿import axios from 'axios'
 import CONFIG from '../config/app.config'
-import { Loading } from 'element-ui'
-let loadingInstance1
+import iView from 'iview'
 class Interceptor {
  // 对请求数据做些什么
   request () {
@@ -38,7 +37,7 @@ class Interceptor {
       return result.join('&')
     }
     axios.interceptors.request.use(function (request) {
-      loadingInstance1 = Loading.service({ fullscreen: true })
+      iView.LoadingBar.start()
       // 本地
       if (CONFIG.DEV_MODE === 0) {
         request.method = 'GET'
@@ -56,7 +55,7 @@ class Interceptor {
   // 对响应数据做点什么
   response () {
     axios.interceptors.response.use(function (response) {
-      loadingInstance1.close()
+      iView.LoadingBar.finish()
       if (response.data) {
         if (response.data.code === 'SUCCESS' || response.data.code === '0') {
           return response.data
