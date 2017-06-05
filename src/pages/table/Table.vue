@@ -141,7 +141,7 @@ export default {
       this.getList({pageIndex: '1'})
     },
     open () {
-      this.$alert(<h1>'这是一段内容'</h1>, '标题名称', {
+      this.$alert('<h1>这是一段内容</h1>', '标题名称', {
         confirmButtonText: '确定',
         callback: action => {
           this.$message({
