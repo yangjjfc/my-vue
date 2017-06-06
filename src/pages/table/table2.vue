@@ -21,7 +21,7 @@
             </Form>
             </Col>
             <Col span="24">
-            <Table border :columns="columns" :data="tableDate" style="width:100% !important"></Table>
+            <Table border :columns="columns" :data="data1" style="width:100% !important"></Table>
             </Col>
             <Col span="24" class="toolbar">
             <pagination :total="total" :pageSize="pageSize" @getList="getList"></pagination>
@@ -33,7 +33,6 @@
 
 <script>
 import pagination from '@/components/pagination'
-import dailog from '@/components/Dailog'
 export default {
   name: 'table',
   data () {
@@ -86,8 +85,7 @@ export default {
         title: '注册证',
         key: 'registNum'
       }, {
-        title: '操作',
-        key: 'oper'
+        title: '操作'
       }],
       tableDate: []
 
@@ -114,12 +112,12 @@ export default {
           console.log(self.pageIndex)
           self.pageSize = re.data.pageSize
           self.total = re.data.total
-          self.tableDate = re.data.rows.map((item, index) => {
-            return {
-              customerName: '<img class="img_logo"  src="http://dfs.test.cloudyigou.com/dfs/s2/M00/25/36/rB4r9Vk2Q5OAYz-CAAC2qa_DwyA720.png">',
-              oper: '<img width="100" height="100" src="http://dfs.test.cloudyigou.com/dfs/s2/M00/25/36/rB4r9Vk2Q5OAYz-CAAC2qa_DwyA720.png">'
-            }
-          })
+          self.tableDate = re.data.rows
+          //   .map((item, index) => {
+          //     return {
+          //       customerName: item.customerName + '<br/>' + item.applyTime
+          //     }
+          //   })
         })
     },
     reset () {
@@ -134,23 +132,70 @@ export default {
     this.getList({})
   },
   components: {
-    pagination,
-    dailog
+    pagination
   }
 }
 
 </script>
 
 <style scoped lang="scss">
-
-.img_logo{
-  border-radius: 50% !important;
-  box-shadow: 0px 0px 2px #ccc !important;
+.toolbar {
+    background: #f2f2f2;
+    padding: 10px;
+    margin: 10px 0px;
+    .ivu-form-item {
+        margin-bottom: 0;
+    }
 }
+
+.w100 {
+    width: 100px !important;
+}
+
+.w120 {
+    width: 120px !important;
+}
+
+.w140 {
+    width: 140px !important;
+}
+
+.w160 {
+    width: 160px !important;
+}
+
+.w180 {
+    width: 180px !important;
+}
+
+.w200 {
+    width: 200px !important;
+}
+
+.w220 {
+    width: 220px !important;
+}
+
+.w240 {
+    width: 240px !important;
+}
+
+.w260 {
+    width: 260px !important;
+}
+
+.w280 {
+    width: 280px !important;
+}
+
+.inline {
+    display: inline-block;
+}
+
 .ivu-form-inline {
 
-  .ivu-form-item {
-    margin-right: 0px !important;
-  }
+    .ivu-form-item {
+        margin-right: 0px !important;
+    }
 }
 </style>

@@ -4,7 +4,7 @@
 			<el-col :span="10" class="logo ">
 				{{sysName}}
 			</el-col>
-			
+	
 			<el-col :span="4" class="userinfo">
 				<el-dropdown trigger="hover">
 					<span class="el-dropdown-link userinfo-inner">
@@ -20,8 +20,8 @@
 		</el-col>
 		<el-col :span="24" class="main">
 			<aside :class="collapsed?'menu-collapsed':'menu-expanded'" class="sidebar">
-				<!--导航菜单--> 
-				<el-menu :default-active="$route.path" class="el-menu-vertical-demo"  unique-opened router v-show="!collapsed" theme="dark">
+				<!--导航菜单-->
+				<el-menu :default-active="$route.path" class="el-menu-vertical-demo" unique-opened router v-show="!collapsed" theme="dark">
 					<template v-for="(item,index) in menuList" v-if="!item.hidden">
 						<el-submenu :index="index+''" v-if="item.son&&item.son.length>0">
 							<template slot="title">
@@ -76,7 +76,7 @@
 				</div>
 			</section>
 		</el-col>
-	</el-row>   
+	</el-row>
 </template>
 
 <script>
@@ -151,9 +151,9 @@ export default {
 </script>
  
 <style scoped lang="scss">
-$menuWidth : 180px ;
-$menuHeight : 50px ;
-$topColor : #1da7b5;
+$menuWidth: 180px;
+$menuHeight: 50px;
+$topColor: #1da7b5;
 .container {
 	position: absolute;
 	top: 0px;
@@ -196,19 +196,17 @@ $topColor : #1da7b5;
 				color: #fff;
 			}
 		}
-		
-		
 	}
 	.main {
-		display: flex; 
+		display: flex;
 		position: absolute;
 		top: $menuHeight;
 		bottom: 0px;
 		overflow: hidden;
 		aside {
-			position:relative;
+			position: relative;
 			flex: 0 0 $menuWidth;
-			width: $menuWidth; 
+			width: $menuWidth;
 			.el-menu {
 				height: 100%;
 			}
@@ -227,19 +225,18 @@ $topColor : #1da7b5;
 				}
 			}
 			.tools {
-				position:absolute;
-				top:46%;
-				height:87px;
-				width:14px;
-				//background:rgba(49,49,49,0.6);
+				position: absolute;
+				top: 46%;
+				height: 87px;
+				width: 14px; //background:rgba(49,49,49,0.6);
 				border-radius: 2px;
-				right:-14px;
+				right: -14px;
 				cursor: pointer;
-				i{
-					font-size:14px;
-					line-height:87px;
+				i {
+					font-size: 14px;
+					line-height: 87px;
 					text-align: center;
-					color:$topColor;
+					color: $topColor;
 				}
 			}
 		}
@@ -253,7 +250,7 @@ $topColor : #1da7b5;
 			width: $menuWidth;
 		}
 		.content-container {
-			flex: 1; 
+			flex: 1;
 			overflow-y: scroll;
 			padding: 20px;
 			.breadcrumb-container {
