@@ -125,7 +125,13 @@ export default {
    // 折叠导航
     collapse: function () {
       this.collapsed = !this.collapsed
-      window.resize()
+      if (document.createEvent) {
+        var event = document.createEvent('HTMLEvents')
+        event.initEvent('resize', true, true)
+        window.dispatchEvent(event)
+      } else if (document.createEventObject) {
+        window.fireEvent('onresize')
+      }
     },
     showMenu (i, status) {
       this.$refs.menuCollapsed.getElementsByClassName('submenu-hook-' + i)[0].style.display = status ? 'block' : 'none'
@@ -135,6 +141,8 @@ export default {
     User.msg = User.msg || {}
     this.sysUserName = User.msg.enterpriseName
     this.sysUserAvatar = CONFIG.IMAGE_DOWNLOAD + User.msg.enterpriseLogo
+  },
+  created () {
     this.useInfo
   },
   // F5刷新重新赋值

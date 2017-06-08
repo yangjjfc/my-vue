@@ -1,6 +1,6 @@
 <template>
     <Modal
-        v-model="$modal1"
+        v-model="$modal"
         :width="$width"
         :title="$title"
         :closable="false" 
@@ -19,13 +19,13 @@
         return {
         }
       },
-      props: ['$modal1', '$width', '$title'],
+      props: ['$modal', '$width', '$title'],
       methods: {
         ok () {
           this.$emit('ok')
         },
         cancel () {
-          this.$emit('cancel')
+          this.$emit('update:$modal', false)
         }
       }
     }

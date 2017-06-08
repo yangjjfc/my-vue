@@ -4,11 +4,11 @@ const MENU = [{
   son: [
     {
       name: '销售趋势',
-      state: 'chart'
+      state: 'charts'
     },
     {
       name: '订单趋势',
-      state: 'chart'
+      state: 'charts'
     }
   ]
 }, {
