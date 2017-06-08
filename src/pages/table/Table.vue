@@ -157,9 +157,7 @@ export default {
           render: (h, params) => {
             return (
               <div>
-                <i-button type="info" onClick={this.open} style={{ marginRight: '5px' }} size="small">解除关系</i-button>
-                <i-button type="info" onClick={this.open} style={{ marginRight: '5px' }} size="small">天剑产品</i-button>
-                <i-button type="info" onClick={this.open} style={{ marginRight: '5px' }} size="small">价格设置</i-button>
+
               </div>
             )
           }

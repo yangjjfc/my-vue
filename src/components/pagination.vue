@@ -1,7 +1,6 @@
 /**分页插件*/
 <template>
-  <el-pagination @size-change="changeSize" @current-change="changePage" :current-page="pageIndex" :page-sizes="[10, 20, 30, 40]" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="total">
-  </el-pagination>
+ <Page :total="total" :page-size="pageSize" @on-change="changePage" @on-page-size-change="changeSize" show-elevator show-sizer show-total></Page>
 </template>
 <script>
 export default {
