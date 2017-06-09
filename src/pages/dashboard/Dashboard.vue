@@ -1,41 +1,39 @@
 <template>
-	<Row class="container">
-		 <Col span="24" class="header">
-			<Col span="10" class="logo" >
+	<el-row class="container">
+		<el-col :span="24" class="header">
+			<el-col :span="10" class="logo ">
 				{{sysName}}
-			</Col>
+			</el-col>
 	
-			<Col span="4" class="userinfo">
-				<Dropdown trigger="hover">
+			<el-col :span="4" class="userinfo">
+				<el-dropdown trigger="hover">
 					<span class="el-dropdown-link userinfo-inner">
 						<img :src="this.sysUserAvatar" /> {{sysUserName}}
 					</span>
-					<Dropdown-menu slot="dropdown">
-						<Dropdown-item>我的消息</Dropdown-item>
-						<Dropdown-item>设置</Dropdown-item>
-						<Dropdown-item divided @click.native="logout">退出登录</Dropdown-item>
-					</Dropdown-menu>
-				</Dropdown>
-			</Col>
-		</Col>
-		<Col span="24" class="main">
+					<el-dropdown-menu slot="dropdown">
+						<el-dropdown-item>我的消息</el-dropdown-item>
+						<el-dropdown-item>设置</el-dropdown-item>
+						<el-dropdown-item divided @click.native="logout">退出登录</el-dropdown-item>
+					</el-dropdown-menu>
+				</el-dropdown>
+			</el-col>
+		</el-col>
+		<el-col :span="24" class="main">
 			<aside :class="collapsed?'menu-collapsed':'menu-expanded'" class="sidebar">
 				<!--导航菜单-->
-				<Menu   v-show="!collapsed" theme="dark" width="auto">
+				<el-menu :default-active="$route.path" class="el-menu-vertical-demo" unique-opened router v-show="!collapsed" theme="dark">
 					<template v-for="(item,index) in menuList" v-if="!item.hidden">
-						<Submenu :name="item.name" v-if="item.son&&item.son.length>0">
+						<el-submenu :index="index+''" v-if="item.son&&item.son.length>0">
 							<template slot="title">
-								<Icon type="ios-navigate"></Icon> {{item.name}}
+								<i :class="item.icon"></i>{{item.name}}
 							</template>
-							<Menu-item  v-for="child in item.son" :name="child.name"  @click="$router.push(child.state)" :key="child.state" v-if="!child.hidden">
-								 <router-link :to="{name:child.state}">{{child.name}}</router-link>
-							</Menu-item>
-						</Submenu>
-							<Menu-item v-if="!item.son" :name="item.name" @click="$router.push(item.state)">
-								<Icon type="ios-navigate"></Icon> {{item.name}}
-							</Menu-item>
+							<el-menu-item v-for="child in item.son" :index="child.state" :key="child.state" v-if="!child.hidden">{{child.name}}</el-menu-item>
+						</el-submenu>
+						<el-menu-item v-if="!item.son" :index="item.state">
+							<i :class="item.icon"></i>{{item.name}}
+						</el-menu-item>
 					</template>
-				</Menu>
+				</el-menu>
 				<!--导航菜单-折叠后-->
 				<ul class="el-menu--dark el-menu-vertical-demo collapsed" v-show="collapsed" ref="menuCollapsed">
 					<li v-for="(item,index) in menuList" v-if="!item.hidden" class="el-submenu item">
@@ -62,23 +60,23 @@
 			</aside>
 			<section class="content-container">
 				<div class="grid-content bg-purple-light">
-					<Col span="24" class="breadcrumb-container">
+					<!--<el-col :span="24" class="breadcrumb-container">
 						<strong class="title">{{$route.name}}</strong>
-						<Breadcrumb separator="/" class="breadcrumb-inner">
-							<Breadcrumb-item v-for="item in $route.matched" :key="item.path">
+						<el-breadcrumb separator="/" class="breadcrumb-inner">
+							<el-breadcrumb-item v-for="item in $route.matched" :key="item.path">
 								{{ item.name }}
-							</Breadcrumb-item>
-						</Breadcrumb>
-					</Col>
-					<Col :span="24" class="content-wrapper">
+							</el-breadcrumb-item>
+						</el-breadcrumb>
+					</el-col>-->
+					<el-col :span="24" class="content-wrapper">
 						<transition name="fade" mode="out-in">
 							<router-view></router-view>
 						</transition>
-					</Col>
+					</el-col>
 				</div>
 			</section>
-		</Col>
-	</Row>
+		</el-col>
+	</el-row>
 </template>
 
 <script>

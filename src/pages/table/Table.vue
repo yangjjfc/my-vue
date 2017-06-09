@@ -1,44 +1,70 @@
 <template>
   <section>
     <!--工具条-->
-    <Row>
-      <Col span="24" class="toolbar">
-      <Form inline>
-        <Form-item label="状态 : " :label-width="70">
-          <Select v-model="from.result.value" placeholder="请选择" class="w100 ">
-            <Option v-for="item in from.result.options" :label="item.label" :value="item.value" :key="item.value"></Option>
-          </Select>
-        </Form-item>
-        <Form-item>
-          <Input placeholder="客户名称" v-model="from.keywords" class="w300"></Input>
-        </Form-item>
-        <Form-item>
-          <Button type="primary" @click="getList({pageIndex:1})">查询</Button>
-        </Form-item>
-        <Form-item>
-          <Button @click="reset">重置 </Button>
-        </Form-item>
-      </Form>
-      </Col>
-      <Col span="24">
-      <Table border :columns="columns" :data="tableDate" style="width:100%"></Table>
-      </Col>
-      <Col span="24" class="toolbar">
+    <el-row>
+      <el-col :span="24" class="toolbar">
+      <el-form :inline="true">
+        <el-form-item label="状态 : " label-width="70">
+          <el-select v-model="from.result.value" placeholder="请选择" class="w100 ">
+            <el-option v-for="item in from.result.options" :label="item.label" :value="item.value" :key="item.value"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item>
+          <el-input placeholder="客户名称" v-model="from.keywords" class="w300"></el-input>
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" @click="getList({pageIndex:1})">查询</el-button>
+        </el-form-item>
+        <el-form-item>
+          <el-button @click="reset">重置 </el-button>
+        </el-form-item>
+      </el-form>
+      </el-col>
+      <el-col :span="24">
+      <el-table :data="tableDate" border style="width: 100%">
+        <el-table-column fixed prop="customerName" label="客户名称" width="350">
+          <template scope="scope">
+            <ul class="customerName_content">
+              <li>
+                <img src="http://dfs.test.cloudyigou.com/dfs/s2/M00/25/39/rB4r9Vk3mwWAdctcAAFf5pjzdHU212_100x100.jpg" class="img_logo" />
+              </li>
+              <li>
+                <p class="ellipsis">{{scope.row.customerName}}</p>
+                <a @click="open" class="right">编辑</a>
+                <p>
+                  <i class="iconfont icon-dianhua1"></i>{{scope.row.linkman}}/{{scope.row.phone}}</p>
+              </li>
+            </ul>
+          </template>
+        </el-table-column>
+        <el-table-column prop="registNum" label="注册证" width="110">
+        </el-table-column>
+        <el-table-column prop="factoryNum" label="生产厂家" width="110">
+        </el-table-column>
+        <el-table-column prop="authorizeNum" label="授权书" width="110">
+        </el-table-column>
+        <el-table-column prop="commitNum" label="承诺书" width="110">
+        </el-table-column>
+        <el-table-column prop="entrustNum" label="业务员" width="110">
+        </el-table-column>
+        <el-table-column prop="productNum" label="产品数量" width="110">
+        </el-table-column>
+        <el-table-column prop="applyTime" label="添加时间" width="130">
+        </el-table-column>
+        <el-table-column prop="status" label="状态" width="110">
+        </el-table-column>
+        <el-table-column label="操作" width="160">
+          <template scope="scope">
+            <el-button size="small" @click="open">编辑</el-button>
+            <el-button size="small" type="danger" @click="open">删除</el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+      </el-col>
+      <el-col :span="24" class="toolbar">
       <pagination :total="total" :pageSize="pageSize" @getList="getList"></pagination>
-      </Col>
-      <Col span="24">
-      <dailog $width="500" $title="添加" :$modal.sync="modal1" @ok="ok">
-        <Form ref="formValidate"  :rules="ruleValidate" :label-width="80" slot="content1">
-          <Form-item label="姓名" prop="name">
-            <Input  placeholder="请输入姓名"></Input>
-          </Form-item>
-          <Form-item label="邮箱" prop="mail">
-            <Input  placeholder="请输入邮箱"></Input>
-          </Form-item>
-        </Form> 
-      </dailog>
-      </Col>
-    </Row>
+      </el-col>
+    </el-row>
   </section>
 </template>
 
@@ -80,97 +106,8 @@ export default {
         },
         keywords: ''
       },
-      columns: [
-        {
-          title: '客户名称',
-          key: 'customerName',
-          width: 350,
-          render: (h, params) => {
-            return (
-              <ul class="customerName_content">
-                <li>
-                  <img src="http://dfs.test.cloudyigou.com/dfs/s2/M00/25/39/rB4r9Vk3mwWAdctcAAFf5pjzdHU212_100x100.jpg" class="img_logo" />
-                </li>
-                <li>
-                  <p class="ellipsis">{params.row.customerName}</p>
-                  <a onClick={this.open} class={{ right: true }}>编辑</a>
-                  <p><i class="iconfont icon-dianhua1"></i>{params.row.linkman}/{params.row.phone}</p>
 
-                </li>
-              </ul>
-            )
-          }
-        },
-        {
-          title: '注册证',
-          key: 'registNum',
-          align: 'center',
-          width: 110
-        },
-        {
-          title: '生产厂家',
-          key: 'factoryNum',
-          align: 'center',
-          width: 110
-        },
-        {
-          title: '授权书',
-          key: 'authorizeNum',
-          align: 'center',
-          width: 110
-        },
-        {
-          title: '承诺书',
-          key: 'commitNum',
-          align: 'center',
-          width: 110
-        },
-        {
-          title: '业务员',
-          key: 'entrustNum',
-          align: 'center',
-          width: 110
-        },
-        {
-          title: '产品数量',
-          key: 'productNum',
-          align: 'center',
-          sortable: true,
-          width: 110
-        },
-        {
-          title: '添加时间',
-          key: 'applyTime',
-          align: 'center',
-          sortable: true,
-          width: 110
-        },
-        {
-          title: '状态',
-          key: 'status',
-          align: 'center',
-          width: 110
-        },
-        {
-          title: '操作',
-          key: 'oper',
-          render: (h, params) => {
-            return (
-              <div>
-
-              </div>
-            )
-          }
-        }],
-      tableDate: [],
-      ruleValidate: {
-        name: [
-            { required: true, message: '姓名不能为空', trigger: 'blur' }
-        ],
-        mail: [
-            { required: true, message: '邮箱不能为空', trigger: 'blur' },
-            { type: 'email', message: '邮箱格式不正确', trigger: 'blur' }
-        ]}
+      tableDate: []
     }
   },
   computed: {
@@ -204,26 +141,46 @@ export default {
         })
     },
     open () {
-      // this.modal1 = true
-      this.$Modal.confirm({
-        title: '确认对话框标题',
-        // render: (h) => {
-        //   return (<i-form ref="formValidate" bindRules={this.ruleValidate} bindLabelWidth="100">
-        //     <i-form-item label="姓名" prop="name">
-        //       <i-input placeholder="请输入姓名"></i-input>
-        //     </i-form-item>
-        //     <i-form-item label="邮箱" prop="mail">
-        //       <i-input placeholder="请输入邮箱"></i-input>
-        //     </i-form-item>
-        //   </i-form>)
-        // },
-        width: 900,
-        onOk: () => {
-          this.$Message.info('点击了确定')
-        },
-        onCancel: () => {
-          this.$Message.info('点击了取消')
+      this.$msgbox({
+        title: '消息',
+        message: (<div>
+          <el-form class="demo-form-inline">
+            <el-form-item label="审批人">
+              <el-input placeholder="审批人"></el-input>
+            </el-form-item>
+            <el-form-item label="活动区域">
+              <el-select placeholder="活动区域">
+                <el-option label="区域一" value="shanghai"></el-option>
+                <el-option label="区域二" value="beijing"></el-option>
+              </el-select>
+            </el-form-item><el-form-item>
+              <el-button type="primary" >查询</el-button>
+            </el-form-item>
+          </el-form>
+
+        </div>),
+        showCancelButton: true,
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        beforeClose: (action, instance, done) => {
+          if (action === 'confirm') {
+            instance.confirmButtonLoading = true
+            instance.confirmButtonText = '执行中...'
+            setTimeout(() => {
+              done()
+              setTimeout(() => {
+                instance.confirmButtonLoading = false
+              }, 300)
+            }, 3000)
+          } else {
+            done()
+          }
         }
+      }).then(action => {
+        this.$message({
+          type: 'info',
+          message: 'action: ' + action
+        })
       })
     },
     handleSubmit (name) {
@@ -279,7 +236,7 @@ export default {
       p {
         width: 75%;
       }
-    }
+    } 
   }
 }
 
