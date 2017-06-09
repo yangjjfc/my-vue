@@ -4,23 +4,22 @@
 </template>
 <script>
 export default {
-  name: 'pagination',
-  data () {
-    return {
-      size: this.pageSize
-    }
-  },
-  // 需要传的参数
-  props: ['total', 'pageSize', 'pageIndex'],
-  methods: {
-    changePage (page) {
-      console.log(page)
-      this.$emit('getList', { pageIndex: page, pageSize: this.size })
+    name: 'pagination',
+    data () {
+        return {
+            size: this.pageSize
+        };
     },
-    changeSize (size) {
-      this.size = size
-      this.$emit('getList', { pageIndex: '1', pageSize: size })
+  // 需要传的参数
+    props: ['total', 'pageSize', 'pageIndex'],
+    methods: {
+        changePage (page) {
+            this.$emit('getList', { pageIndex: page, pageSize: this.size });
+        },
+        changeSize (size) {
+            this.size = size;
+            this.$emit('getList', { pageIndex: '1', pageSize: size });
+        }
     }
-  }
-}
+};
 </script>

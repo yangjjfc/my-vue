@@ -22,7 +22,7 @@
       </el-col>
       <el-col :span="24">
       <el-table :data="tableDate" border style="width: 100%">
-        <el-table-column fixed prop="customerName" label="客户名称" width="350">
+        <el-table-column  prop="customerName" label="客户名称" width="350">
           <template scope="scope">
             <ul class="customerName_content">
               <li>
@@ -32,31 +32,79 @@
                 <p class="ellipsis">{{scope.row.customerName}}</p>
                 <a @click="open" class="right">编辑</a>
                 <p>
-                  <i class="iconfont icon-dianhua1"></i>{{scope.row.linkman}}/{{scope.row.phone}}</p>
+                  <i class="iconfont icon-dianhua1 Warning"></i>{{scope.row.linkman}}/{{scope.row.phone}}</p>
               </li>
             </ul>
           </template>
         </el-table-column>
-        <el-table-column prop="registNum" label="注册证" width="110">
+        <el-table-column  label="注册证" width="110" align="center">
+            <template scope="scope">
+                <div class="certs">
+                    <a v-if="scope.row.registNum>0">
+                        <i class="zhu1">{{scope.row.registNum}}</i>
+                    </a>
+                     <i class="zhu1" v-else>{{scope.row.registNum}}</i>
+                </div>
+            </template>
         </el-table-column>
-        <el-table-column prop="factoryNum" label="生产厂家" width="110">
+        <el-table-column  label="生产厂家" width="110" align="center">
+             <template scope="scope">
+                <div class="certs">
+                    <a v-if="scope.row.factoryNum>0">
+                        <i class="zhu2">{{scope.row.factoryNum}}</i>
+                    </a>
+                     <i class="zhu1" v-else>{{scope.row.factoryNum}}</i>
+                </div>
+            </template>
         </el-table-column>
-        <el-table-column prop="authorizeNum" label="授权书" width="110">
+        <el-table-column  label="授权书" width="110" align="center">
+             <template scope="scope">
+                <div class="certs">
+                    <a v-if="scope.row.authorizeNum>0">
+                        <i class="zhu3">{{scope.row.authorizeNum}}</i>
+                    </a>
+                     <i class="zhu1" v-else>{{scope.row.authorizeNum}}</i>
+                </div>
+            </template>
         </el-table-column>
-        <el-table-column prop="commitNum" label="承诺书" width="110">
+        <el-table-column  label="承诺书" width="110" align="center">
+             <template scope="scope">
+                <div class="certs">
+                    <a v-if="scope.row.commitNum>0">
+                        <i class="zhu4">{{scope.row.commitNum}}</i>
+                    </a>
+                     <i class="zhu1" v-else>{{scope.row.commitNum}}</i>
+                </div>
+            </template>
         </el-table-column>
-        <el-table-column prop="entrustNum" label="业务员" width="110">
+        <el-table-column  label="业务员" width="110" align="center">
+             <template scope="scope">
+                <div class="certs">
+                    <a v-if="scope.row.entrustNum>0">
+                        <i class="zhu5">{{scope.row.entrustNum}}</i>
+                    </a>
+                     <i class="zhu1" v-else>{{scope.row.entrustNum}}</i>
+                </div>
+            </template>
         </el-table-column>
-        <el-table-column prop="productNum" label="产品数量" width="110">
+        <el-table-column prop="productNum" label="产品数量" width="110" align="center">
         </el-table-column>
-        <el-table-column prop="applyTime" label="添加时间" width="130">
+        <el-table-column prop="applyTime" label="添加时间" width="130" align="center">
         </el-table-column>
-        <el-table-column prop="status" label="状态" width="110">
+        <el-table-column  label="状态" width="110" align="center">
+            <template scope="scope">
+                <span class="Warning" v-if="scope.row.status=='3'">待审核</span>
+                <span class="Success" v-else-if="scope.row.status=='1'">已通过</span>
+                <span class="Gray" v-else-if="scope.row.status=='4'">被拒绝</span>
+                <span class="Danger" v-else-if="scope.row.status=='6'">被解除</span>
+            </template>
         </el-table-column>
-        <el-table-column label="操作" width="160">
+        <el-table-column label="操作" min-width="230">
           <template scope="scope">
-            <el-button size="small" @click="open">编辑</el-button>
-            <el-button size="small" type="danger" @click="open">删除</el-button>
+            <el-button size="mini" type="primary" @click="open">添加产品</el-button>
+            <el-button size="mini" type="primary" @click="open">价格设置</el-button>
+            <el-button size="mini" type="warning" @click="open">解除关系</el-button>
+            <el-button size="mini" type="danger" @click="open">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -69,81 +117,79 @@
 </template>
 
 <script>
-import pagination from '@/components/pagination'
-import dailog from '@/components/Dailog'
+import pagination from '@/components/pagination';
+import dailog from '@/components/Dailog';
 export default {
-  name: 'table',
-  data () {
-    return {
-      modal1: false,
-      users: [],
-      total: 0,
-      pageSize: 20,
-      pageIndex: 1,
-      from: {
-        result: {
-          options: [{
-            value: -1,
-            label: '全部'
-          },
-          {
-            value: 3,
-            label: '待审核'
-          },
-          {
-            value: 1,
-            label: '已通过'
-          },
-          {
-            value: 4,
-            label: '被拒绝'
-          },
-          {
-            value: 6,
-            label: '被解除'
-          }],
-          value: -1
-        },
-        keywords: ''
-      },
+    name: 'table',
+    data () {
+        return {
+            modal1: false,
+            users: [],
+            total: 0,
+            pageSize: 20,
+            pageIndex: 1,
+            from: {
+                result: {
+                    options: [{
+                        value: -1,
+                        label: '全部'
+                    },
+                    {
+                        value: 3,
+                        label: '待审核'
+                    },
+                    {
+                        value: 1,
+                        label: '已通过'
+                    },
+                    {
+                        value: 4,
+                        label: '被拒绝'
+                    },
+                    {
+                        value: 6,
+                        label: '被解除'
+                    }],
+                    value: -1
+                },
+                keywords: ''
+            },
 
-      tableDate: []
-    }
-  },
-  computed: {
-  },
-  methods: {
-    getList: function ({ pageIndex = this.pageIndex, pageSize = this.pageSize }) {
-      let self = this
-      this.Http.post('scm.supplier.queryCustomers',
-        {
-          'params': {
-            'keywords': this.from.keywords,
-            'orderBy': 'desc',
-            'orderField': 'apply_time',
-            'status': this.from.result.value,
-            'pageIndex': pageIndex,
-            'pageSize': pageSize
-          }
-        }).then(function (re) {
-          console.log(re)
-          self.pageIndex = re.data.pageIndex
-          console.log(self.pageIndex)
-          self.pageSize = re.data.pageSize
-          self.total = re.data.total
-          self.tableDate = re.data.rows
+            tableDate: []
+        };
+    },
+    computed: {
+    },
+    methods: {
+        getList: function ({ pageIndex = this.pageIndex, pageSize = this.pageSize }) {
+            let self = this;
+            this.Http.post('scm.supplier.queryCustomers',
+                {
+                    'params': {
+                        'keywords': this.from.keywords,
+                        'orderBy': 'desc',
+                        'orderField': 'apply_time',
+                        'status': this.from.result.value,
+                        'pageIndex': pageIndex,
+                        'pageSize': pageSize
+                    }
+                }).then(function (re) {
+                    self.pageIndex = re.data.pageIndex;
+                    self.pageSize = re.data.pageSize;
+                    self.total = re.data.total;
+                    self.tableDate = re.data.rows;
           // .map((item, index) => {
           //   let s = ``
           //   return {
           //     customerName: s
           //   }
           // })
-        })
-    },
-    open () {
-      this.$msgbox({
-        title: '消息',
-        message: (<div>
+                });
+        },
+        open () {
+            this.$msgbox({
+                title: '消息',
+                message: (<div>
           <el-form class="demo-form-inline">
             <el-form-item label="审批人">
               <el-input placeholder="审批人"></el-input>
@@ -159,58 +205,58 @@ export default {
           </el-form>
 
         </div>),
-        showCancelButton: true,
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        beforeClose: (action, instance, done) => {
-          if (action === 'confirm') {
-            instance.confirmButtonLoading = true
-            instance.confirmButtonText = '执行中...'
-            setTimeout(() => {
-              done()
-              setTimeout(() => {
-                instance.confirmButtonLoading = false
-              }, 300)
-            }, 3000)
-          } else {
-            done()
-          }
+                showCancelButton: true,
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                beforeClose: (action, instance, done) => {
+                    if (action === 'confirm') {
+                        instance.confirmButtonLoading = true;
+                        instance.confirmButtonText = '执行中...';
+                        setTimeout(() => {
+                            done();
+                            setTimeout(() => {
+                                instance.confirmButtonLoading = false;
+                            }, 300);
+                        }, 3000);
+                    } else {
+                        done();
+                    }
+                }
+            }).then(action => {
+                this.$message({
+                    type: 'info',
+                    message: 'action: ' + action
+                });
+            });
+        },
+        handleSubmit (name) {
+            this.$refs[name].validate((valid) => {
+                if (valid) {
+                    this.$Message.success('提交成功!');
+                } else {
+                    this.$Message.error('表单验证失败!');
+                }
+            });
+        },
+        reset () {
+            this.pageIndex = 1;
+            this.from.keywords = '';
+            this.from.result.value = -1;
+            this.getList({ pageIndex: '1' });
+        },
+        ok () {
+            this.handleSubmit('formValidate');
         }
-      }).then(action => {
-        this.$message({
-          type: 'info',
-          message: 'action: ' + action
-        })
-      })
-    },
-    handleSubmit (name) {
-      this.$refs[name].validate((valid) => {
-        if (valid) {
-          this.$Message.success('提交成功!')
-        } else {
-          this.$Message.error('表单验证失败!')
-        }
-      })
-    },
-    reset () {
-      this.pageIndex = 1
-      this.from.keywords = ''
-      this.from.result.value = -1
-      this.getList({ pageIndex: '1' })
-    },
-    ok () {
-      this.handleSubmit('formValidate')
-    }
 
-  },
-  mounted () {
-    this.getList({})
-  },
-  components: {
-    pagination,
-    dailog
-  }
-}
+    },
+    mounted () {
+        this.getList({});
+    },
+    components: {
+        pagination,
+        dailog
+    }
+};
 
 </script>
 
@@ -224,7 +270,6 @@ export default {
 }
 
 .customerName_content {
-
   li {
     &:nth-of-type(1) {
       float: left;
@@ -244,5 +289,38 @@ export default {
   .ivu-form-item {
     margin-right: 0px !important;
   }
+}
+.certs{
+    text-align: center;
+    vertical-align: middle;
+    display: inline-block;
+    width: 100%;
+    i{
+        display: inline-block;
+        width: 55px;
+        min-height: 40px;
+        background-repeat: no-repeat;
+        background-size: 100%;
+        padding-top: 15px;
+        font-style: normal;
+        text-indent: 1em;
+        box-sizing: border-box;
+    }
+    .zhu1{
+        background:url(../..//assets/images/u414.png) no-repeat;
+    }
+    .zhu2{
+        background:url(../..//assets/images/u416.png) no-repeat;
+    }
+    .zhu3{
+        background:url(../..//assets/images/u418.png) no-repeat;
+    }
+    .zhu4{
+        background:url(../..//assets/images/u420.png) no-repeat;
+    }
+    .zhu5{
+        background:url(../..//assets/images/u422.png) no-repeat;
+    }
+    
 }
 </style>
