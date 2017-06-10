@@ -1,9 +1,9 @@
 var config = {
   // `url` 是用于请求的服务器 URL
-  url: '/api',
+    url: '/api',
 
   // `method` 是创建请求时使用的方法
-  method: 'get', // 默认是 get
+    method: 'get', // 默认是 get
 
   // `baseURL` 将自动加在 `url` 前面，除非 `url` 是一个绝对 URL。
   // 它可以通过设置一个 `baseURL` 便于为 axios 实例的方法传递相对 URL
@@ -12,18 +12,18 @@ var config = {
   // `transformRequest` 允许在向服务器发送前，修改请求数据
   // 只能用在 'PUT', 'POST' 和 'PATCH' 这几个请求方法
   // 后面数组中的函数必须返回一个字符串，或 ArrayBuffer，或 Stream
-  transformRequest: [function (data) {
+    transformRequest: [function (data) {
     // 对 data 进行任意转换处理
 
-    return data
-  }],
+        return data;
+    }],
 
   // `transformResponse` 在传递给 then/catch 前，允许修改响应数据
-  transformResponse: [function (data) {
+    transformResponse: [function (data) {
     // 对 data 进行任意转换处理
 
-    return data
-  }],
+        return data;
+    }],
 
   // `headers` 是即将被发送的自定义请求头
  // headers: {'X-Requested-With': 'XMLHttpRequest'},
@@ -46,16 +46,16 @@ var config = {
   // - string, plain object, ArrayBuffer, ArrayBufferView, URLSearchParams
   // - 浏览器专属：FormData, File, Blob
   // - Node 专属： Stream
-  data: {
-    firstName: 'Fred'
-  },
+    data: {
+        firstName: 'Fred'
+    },
 
   // `timeout` 指定请求超时的毫秒数(0 表示无超时时间)
   // 如果请求话费了超过 `timeout` 的时间，请求将被中断
-  timeout: 2000,
+    timeout: 2000,
 
   // `withCredentials` 表示跨域请求时是否需要使用凭证
-  withCredentials: false, // 默认的
+    withCredentials: false, // 默认的
 
   // `adapter` 允许自定义处理请求，以使测试更轻松
   // 返回一个 promise 并应用一个有效的响应 (查阅 [response docs](#response-api)).
@@ -65,15 +65,15 @@ var config = {
 
   // `auth` 表示应该使用 HTTP 基础验证，并提供凭据
   // 这将设置一个 `Authorization` 头，覆写掉现有的任意使用 `headers` 设置的自定义 `Authorization`头
-  auth: {
-    'X-Requested-With': 'XMLHttpRequest',
-    'Content-Type': 'application/json',
-    'jtoken': 'jtoken',
-    'apiName': 'apiName'
-  },
+    auth: {
+        'X-Requested-With': 'XMLHttpRequest',
+        'Content-Type': 'application/json',
+        'jtoken': 'jtoken',
+        'apiName': 'apiName'
+    },
 
   // `responseType` 表示服务器响应的数据类型，可以是 'arraybuffer', 'blob', 'document', 'json', 'text', 'stream'
-  responseType: 'json', // 默认的
+    responseType: 'json', // 默认的
 
   // `xsrfCookieName` 是用作 xsrf token 的值的cookie的名称
   // xsrfCookieName: 'XSRF-TOKEN', // default
@@ -92,16 +92,16 @@ var config = {
 //   },
 
   // `maxContentLength` 定义允许的响应内容的最大尺寸
-  maxContentLength: 2000,
+    maxContentLength: 2000,
 
   // `validateStatus` 定义对于给定的HTTP 响应状态码是 resolve 或 reject  promise 。如果 `validateStatus` 返回 `true` (或者设置为 `null` 或 `undefined`)，promise 将被 resolve; 否则，promise 将被 rejecte
-  validateStatus: function (status) {
-    return status >= 200 && status < 300 // 默认的
-  },
+    validateStatus: function (status) {
+        return status >= 200 && status < 300; // 默认的
+    },
 
   // `maxRedirects` 定义在 node.js 中 follow 的最大重定向数目
   // 如果设置为0，将不会 follow 任何重定向
-  maxRedirects: 5 // 默认的
+    maxRedirects: 5 // 默认的
 
   // `httpAgent` 和 `httpsAgent` 分别在 node.js 中用于定义在执行 http 和 https 时使用的自定义代理。允许像这样配置选项：
   // `keepAlive` 默认没有启用
@@ -124,6 +124,6 @@ var config = {
   // （查看后面的 Cancellation 这节了解更多）
 //   cancelToken: new CancelToken(function (cancel) {
 //   })
-}
+};
 
-export default config
+export default config;

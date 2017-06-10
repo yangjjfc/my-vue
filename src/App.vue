@@ -8,8 +8,8 @@
 
 <script>
     export default {
-      name: 'app'
-    }
+        name: 'app'
+    };
 </script>
 
 <style lang="scss" >
@@ -28,4 +28,4 @@
     .router-fade-enter, .router-fade-leave-active {
          opacity: 0;
     }
-</style>  
+</style>   

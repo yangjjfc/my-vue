@@ -28,11 +28,11 @@
     import CONFIG from '../config/app.config';
     import '../directive/vueDirective.js';
     import Utils from '@/services/Utils';
-    var pdf = require('@/assets/images/pdf.png')
-    var noimage = require('@/assets/images/noimage.png')
+    let pdf = require('@/assets/images/pdf.png');
+    let noimage = require('@/assets/images/noimage.png');
     export default {
         name: 'FileUpload',
-        data (){
+        data () {
             return {
                 defaultList: [],
                 imgName: '',
@@ -46,9 +46,9 @@
                     }
                 ],
                 config: CONFIG
-            }
+            };
         },
-        //传入文件列表->双向绑定  ， 上传失败回调 ，上传成功回调 ， 输出格式 string array
+        // 传入文件列表->双向绑定  ， 上传失败回调 ，上传成功回调 ， 输出格式 string array
         props: {
             removeCallback: Function,
             successCallback: Function,
@@ -73,28 +73,28 @@
                 this.removeCallback && this.removeCallback(file);
                 this.synchronization();
             },
-            //同步
+            // 同步
             synchronization: function () {
                 let list = this.uploadList.map(function (item) {
                     return item.url;
                 });
-                this.exportType && this.exportType.toLowerCase() == 'string' && (list += '');
+                this.exportType && this.exportType.toLowerCase() === 'string' && (list += '');
                 this.$emit('update:fileList', list);
             },
-            //格式化文件
+            // 格式化文件
             formatFile (item, name) {
                 var self = this,
-                        thumbnail;
+                    thumbnail;
                 switch (Utils.getFileType(item)) {
-                    case 'image':
-                        thumbnail = self.config.IMAGE_DOWNLOAD + item;
-                        break;
-                    case 'pdf':
-                        thumbnail = pdf;
-                        break;
-                    default :
-                        thumbnail = noimage;
-                        break;
+                case 'image':
+                    thumbnail = self.config.IMAGE_DOWNLOAD + item;
+                    break;
+                case 'pdf':
+                    thumbnail = pdf;
+                    break;
+                default :
+                    thumbnail = noimage;
+                    break;
                 }
                 return {
                     name: name || '',
@@ -102,11 +102,11 @@
                     status: 'finished',
                     thumbnail: thumbnail,
                     fullUrl: self.config.IMAGE_DOWNLOAD + item
-                }
+                };
             },
             handleSuccess (res, file) {
                 const url = JSON.parse(res).data,
-                        obj = this.formatFile(url, file.name);
+                    obj = this.formatFile(url, file.name);
                 file.thumbnail = obj.thumbnail;
                 file.fullUrl = obj.fullUrl;
                 file.url = obj.url;
@@ -135,19 +135,17 @@
                 return check;
             }
         },
-        created(){
+        created () {
             this.maxLength = Math.round(this.max);
             if (this.fileList && this.fileList.length) {
-                this.fileList = typeof this.fileList == 'string' ? this.fileList.split(',') : this.fileList;
-                this.defaultList = this.fileList.map((item) => {
-                    return this.formatFile(item);
-                });
+                this.fileList = typeof this.fileList === 'string' ? this.fileList.split(',') : this.fileList;
+                this.defaultList = this.fileList.map((item) => this.formatFile(item));
             }
         },
-        mounted(){
+        mounted () {
             this.uploadList = this.$refs.upload.fileList;
         }
-    }
+    };
 </script>
 
 <style lang="scss" scoped rel="stylesheet/scss">

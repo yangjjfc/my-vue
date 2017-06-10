@@ -14,19 +14,19 @@
 </template>
 <script>
     export default {
-      name: 'Dailog',
-      data () {
-        return {
-        }
-      },
-      props: ['$modal', '$width', '$title'],
-      methods: {
-        ok () {
-          this.$emit('ok')
+        name: 'Dailog',
+        data () {
+            return {
+            };
         },
-        cancel () {
-          this.$emit('update:$modal', false)
+        props: ['$modal', '$width', '$title'],
+        methods: {
+            ok () {
+                this.$emit('ok');
+            },
+            cancel () {
+                this.$emit('update:$modal', false);
+            }
         }
-      }
-    }
+    };
 </script>
