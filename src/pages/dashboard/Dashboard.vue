@@ -36,7 +36,7 @@
 		</el-col>
 	
 		<el-col :span="24" class="main">
-	
+	     
 			<aside :class="collapsed?'menu-collapsed':'menu-expanded'" class="sidebar">
 	
 				<!--导航菜单-->
@@ -57,19 +57,12 @@
 				<!--导航菜单-折叠后-->
 				<ul class="el-menu--dark el-menu-vertical-demo collapsed" v-show="collapsed" ref="menuCollapsed">
 					<li v-for="(item,index) in menuList" v-if="!item.hidden" class="el-submenu item">
-						<template v-if="item.son&&item.son.length>
-		0">
-	
+						<template v-if="item.son&&item.son.length>0">
 							<div class="el-submenu__title" style="padding-left: 20px;" @mouseover="showMenu(index,true)" @mouseout="showMenu(index,false)">
-	
 								<i :class="item.icon"></i>
-	
 							</div>
-	
 							<ul class="el-menu submenu" :class="'submenu-hook-'+index" @mouseover="showMenu(index,true)" @mouseout="showMenu(index,false)">
-	
 								<li v-for="child in item.son" v-if="!child.hidden" :key="child.state" class="el-menu-item" style="padding-left: 40px;" :class="$route.path==child.state?'is-active':''" @click="$router.push(child.state)">{{child.name}}</li>
-	
 							</ul>
 						</template>
 						<template v-else>
@@ -92,13 +85,13 @@
 			<section class="content-container">
 				<div class="grid-content bg-purple-light">
 					<!--<el-col :span="24" class="breadcrumb-container">
-							<strong class="title">{{$route.name}}</strong>
-							<el-breadcrumb separator="/" class="breadcrumb-inner">
-								<el-breadcrumb-item v-for="item in $route.matched" :key="item.path">
-									{{ item.name }}
-								</el-breadcrumb-item>
-							</el-breadcrumb>
-						</el-col>-->
+										<strong class="title">{{$route.name}}</strong>
+										<el-breadcrumb separator="/" class="breadcrumb-inner">
+											<el-breadcrumb-item v-for="item in $route.matched" :key="item.path">
+												{{ item.name }}
+											</el-breadcrumb-item>
+										</el-breadcrumb>
+									</el-col>-->
 					<el-col :span="24" class="content-wrapper">
 						<transition name="fade" mode="out-in">
 							<router-view></router-view>
@@ -445,7 +438,7 @@ $topColor: #1da7b5;
 					float: right;
 				}
 			}
-       
+
 			.content-wrapper {
 
 				background-color: #fff;

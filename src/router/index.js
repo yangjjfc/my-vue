@@ -1,5 +1,5 @@
 const dashboard = r => require.ensure([], () => r(require('../pages/dashboard/Dashboard')), 'dashboard');
-const table = r => require.ensure([], () => r(require('../pages/table/Table')), 'table');
+const customerList = r => require.ensure([], () => r(require('../pages/hospital/customer-list/customer-list')), 'customerList'); // 医院管理-客户列表
 const charts = r => require.ensure([], () => r(require('../pages/echarts/echarts')), 'charts');
 import Auth from '../pages/auth/Auth';
 export default [
@@ -15,7 +15,7 @@ export default [
         name: 'dashboard',
         component: dashboard,
         children: [
-      {path: '/table', component: table, name: 'table'},
+      {path: '/customerList', component: customerList, name: 'customerList'},
       {path: '/charts', component: charts, name: 'charts'}
         ]
     }

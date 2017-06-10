@@ -30,7 +30,7 @@
                                 </li>
                                 <li>
                                     <p class="ellipsis">{{scope.row.customerName}}</p>
-                                    <a @click="open" class="right">编辑</a>
+                                    <a @click="editUser(scope.row)" class="right">编辑</a>
                                     <p>
                                         <i class="iconfont icon-dianhua1 Warning"></i>{{scope.row.linkman}}/{{scope.row.phone}}</p>
                                 </li>
@@ -112,17 +112,22 @@
             <el-col :span="24" class="toolbar">
                 <pagination :total="total" :pageSize="pageSize" @getList="getList"></pagination>
             </el-col>
+            <el-col :span="24">
+                <editUser :showx.sync="showEdit" :msg="editUserMsg" @refsh="getList({})"></editUser>
+            </el-col>  
         </el-row>
     </section>
 </template>
 
 <script>
 import pagination from '@/components/pagination';
-import dailog from '@/components/Dailog';
+import editUser from './components/editUser';
 export default {
-    name: 'table',
+    name: 'customer-list',
     data () {
         return {
+            showEdit: false,
+            editUserMsg: {},
             modal1: false,
             users: [],
             total: 0,
@@ -178,56 +183,14 @@ export default {
                     self.pageSize = re.data.pageSize;
                     self.total = re.data.total;
                     self.tableDate = re.data.rows;
-                    // .map((item, index) => {
-                    //   let s = ``
-                    //   return {
-                    //     customerName: s
-                    //   }
-                    // })
                 });
         },
         open () {
-            this.$msgbox({
-                title: '消息',
-                message: (<div>
-                    <el-form class="demo-form-inline">
-                        <el-form-item label="审批人">
-                            <el-input placeholder="审批人"></el-input>
-                        </el-form-item>
-                        <el-form-item label="活动区域">
-                            <el-select placeholder="活动区域">
-                                <el-option label="区域一" value="shanghai"></el-option>
-                                <el-option label="区域二" value="beijing"></el-option>
-                            </el-select>
-                        </el-form-item><el-form-item>
-                            <el-button type="primary" >查询</el-button>
-                        </el-form-item>
-                    </el-form>
 
-                </div>),
-                showCancelButton: true,
-                confirmButtonText: '确定',
-                cancelButtonText: '取消',
-                beforeClose: (action, instance, done) => {
-                    if (action === 'confirm') {
-                        instance.confirmButtonLoading = true;
-                        instance.confirmButtonText = '执行中...';
-                        setTimeout(() => {
-                            done();
-                            setTimeout(() => {
-                                instance.confirmButtonLoading = false;
-                            }, 300);
-                        }, 3000);
-                    } else {
-                        done();
-                    }
-                }
-            }).then(action => {
-                this.$message({
-                    type: 'info',
-                    message: 'action: ' + action
-                });
-            });
+        },
+        editUser (msg) {
+            this.showEdit = true;
+            this.editUserMsg = msg;
         },
         handleSubmit (name) {
             this.$refs[name].validate((valid) => {
@@ -254,7 +217,7 @@ export default {
     },
     components: {
         pagination,
-        dailog
+        editUser
     }
 };
 
@@ -308,19 +271,19 @@ export default {
         box-sizing: border-box;
     }
     .zhu1 {
-        background: url(../..//assets/images/u414.png) no-repeat;
+        background: url(../../..//assets/images/u414.png) no-repeat;
     }
     .zhu2 {
-        background: url(../..//assets/images/u416.png) no-repeat;
+        background: url(../../..//assets/images/u416.png) no-repeat;
     }
     .zhu3 {
-        background: url(../..//assets/images/u418.png) no-repeat;
+        background: url(../../..//assets/images/u418.png) no-repeat;
     }
     .zhu4 {
-        background: url(../..//assets/images/u420.png) no-repeat;
+        background: url(../../..//assets/images/u420.png) no-repeat;
     }
     .zhu5 {
-        background: url(../..//assets/images/u422.png) no-repeat;
+        background: url(../../..//assets/images/u422.png) no-repeat;
     }
 }
 </style>

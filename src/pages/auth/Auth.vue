@@ -114,7 +114,7 @@ export default {
             });
             if (!xflag) {
                 this.userLogin(param).then(function (msg) {
-                    self.$router.push({ name: 'table' });
+                    self.$router.push({ name: 'charts' });
                 }, function (err) {
                     // 记录错误信息
                     self.errorMsg = err.message;
