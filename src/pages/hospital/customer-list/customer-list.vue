@@ -13,10 +13,13 @@
                         <el-input placeholder="客户名称" v-model="from.keywords" class="w300"></el-input>
                     </el-form-item>
                     <el-form-item>
-                        <el-button type="primary" @click="getList({pageIndex:1})">查询</el-button>
+                        <el-button type="primary" @click="getList(1)">查询</el-button>
                     </el-form-item>
                     <el-form-item>
                         <el-button @click="reset">重置 </el-button>
+                    </el-form-item>
+                    <el-form-item class="right">
+                        <el-button type="primary" @click="addUser">添加客户</el-button>
                     </el-form-item>
                 </el-form>
             </el-col>
@@ -31,7 +34,7 @@
                                 <li>
                                     <p class="ellipsis">{{scope.row.customerName}}</p>
                                     <a @click="editUser(scope.row)" class="right">编辑</a>
-                                    <p>
+                                    <p class="ellipsis">
                                         <i class="iconfont icon-dianhua1 Warning"></i>{{scope.row.linkman}}/{{scope.row.phone}}</p>
                                 </li>
                             </ul>
@@ -103,31 +106,41 @@
                         <template scope="scope">
                             <el-button size="mini" type="primary" @click="open">添加产品</el-button>
                             <el-button size="mini" type="primary" @click="open">价格设置</el-button>
-                            <el-button size="mini" type="warning" @click="open">解除关系</el-button>
+                            <el-button size="mini" type="warning" @click="relieve(scope.row)">解除关系</el-button>
                             <el-button size="mini" type="danger" @click="open">删除</el-button>
                         </template>
                     </el-table-column>
                 </el-table>
             </el-col>
             <el-col :span="24" class="toolbar">
-                <pagination :total="total" :pageSize="pageSize" @getList="getList"></pagination>
+                <pagination :total="total" :pageSize="pageSize"  @change="getList"></pagination>
             </el-col>
             <el-col :span="24">
-                <editUser :showx.sync="showEdit" :msg="editUserMsg" @refsh="getList({})"></editUser>
+                <editUser :showx.sync="showEdit" :msg="editUserMsg" @refresh="getList"></editUser>
             </el-col>  
+            <el-col :span="24">
+                <addUser :showx.sync="showaddUser"  @refresh="getList"></addUser>
+            </el-col> 
+            <el-col :span="24">
+                <relieve :showx.sync="showrelieveUser" :msg="relieveUserMsg" @refresh="getList"></relieve>
+            </el-col> 
         </el-row>
     </section>
 </template>
-
 <script>
 import pagination from '@/components/pagination';
-import editUser from './components/editUser';
+import editUser from './components/editUser'; // 编辑
+import addUser from './components/addUser';  // 添加客户
+import relieve from './components/relieve'; // 解除客户
 export default {
     name: 'customer-list',
     data () {
         return {
-            showEdit: false,
-            editUserMsg: {},
+            showEdit: false, // 显示编辑用户
+            editUserMsg: null, // 编辑用户数据
+            showaddUser: false, // 显示添加用户
+            showrelieveUser: false, // 显示解除用户
+            relieveUserMsg: null, // 显示解除用户数据
             modal1: false,
             users: [],
             total: 0,
@@ -159,15 +172,14 @@ export default {
                 },
                 keywords: ''
             },
-
             tableDate: []
         };
     },
     computed: {
     },
     methods: {
-        getList: function ({ pageIndex = this.pageIndex, pageSize = this.pageSize }) {
-            let self = this;
+        // 获取列表
+        getList (pageIndex = this.pageIndex, pageSize = this.pageSize) {
             this.Http.post('scm.supplier.queryCustomers',
                 {
                     'params': {
@@ -178,46 +190,45 @@ export default {
                         'pageIndex': pageIndex,
                         'pageSize': pageSize
                     }
-                }).then(function (re) {
-                    self.pageIndex = re.data.pageIndex;
-                    self.pageSize = re.data.pageSize;
-                    self.total = re.data.total;
-                    self.tableDate = re.data.rows;
+                }).then((re) => {
+                    this.pageIndex = re.data.pageIndex;
+                    this.pageSize = re.data.pageSize;
+                    this.total = re.data.total;
+                    this.tableDate = re.data.rows;
                 });
         },
         open () {
 
         },
+        // 编辑用户
         editUser (msg) {
             this.showEdit = true;
-            this.editUserMsg = msg;
+            this.editUserMsg = {...msg};
         },
-        handleSubmit (name) {
-            this.$refs[name].validate((valid) => {
-                if (valid) {
-                    this.$Message.success('提交成功!');
-                } else {
-                    this.$Message.error('表单验证失败!');
-                }
-            });
+        // 添加用户
+        addUser () {
+            this.showaddUser = true;
+        },
+        // 解除用户
+        relieve (msg) {
+            this.showrelieveUser = true;
+            this.relieveUserMsg = {...msg, relieve: ''};// es7对象扩展
         },
         reset () {
             this.pageIndex = 1;
             this.from.keywords = '';
             this.from.result.value = -1;
-            this.getList({ pageIndex: '1' });
-        },
-        ok () {
-            this.handleSubmit('formValidate');
+            this.getList(1);
         }
-
     },
     mounted () {
-        this.getList({});
+        this.getList();
     },
     components: {
         pagination,
-        editUser
+        editUser,
+        addUser,
+        relieve
     }
 };
 
@@ -242,7 +253,7 @@ export default {
             position: relative;
             top: 5px;
             p {
-                width: 75%;
+                width: 67%;
             }
         }
     }

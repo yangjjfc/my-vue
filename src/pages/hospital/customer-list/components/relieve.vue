@@ -1,19 +1,14 @@
 //编辑用户电话和联系人
 <template>
     <section>
-        <dailog size="tiny" :show.sync="myshow" classx="eidt-user" title="编辑联系人" @ok="ok" @reset="reset" >
+        <dailog size="tiny" :show.sync="myshow"  title="解除关系" @ok="ok" @reset="reset" >
             <el-form slot="content" ref="edits" label-width="100px" class="demo-dynamic" :model="msgx">
-                <el-form-item label="医院名称" >
+                <el-form-item label="客户名称" >
                     <p v-text="msgx.customerName"></p>
                 </el-form-item>
-                <el-form-item label="联系人" prop="linkman" 
-                :rules="[{ required: true, message: '请输入联系人', trigger: 'blur' }]">
-                    <el-input placeholder="联系人" v-model="msgx.linkman"></el-input>
-                </el-form-item>
-                <el-form-item label="联系电话" prop="phone" :rules="[
-              { required: true, message: '请输入联系电话', trigger: 'blur' },
-              { pattern:/^1\d{10}$/, message: '请输入正确的联系电话', trigger: 'blur,change'}]">
-                    <el-input placeholder="联系电话" v-model="msgx.phone"></el-input>
+                <el-form-item label="解除原因" prop="relieve"   
+                :rules="[{ required: true, message: '请输入解除原因', trigger: 'blur' }]">
+                    <el-input type="textarea" v-model="msgx.relieve"  :rows="4"></el-input>
                 </el-form-item>
             </el-form>
         </dailog>
@@ -22,11 +17,11 @@
 
 <script>
 const URL = {
-    'modCustomerlinkman': 'scm.supplier.modCustomerlinkman'
+    'replyCustomer': 'scm.supplier.replyCustomer'
 };
 import dailog from '@/components/Dailog';
 export default {
-    name: 'editUser',
+    name: 'relieve',
     props: ['showx', 'msg'],
     data () {
         return {
@@ -41,18 +36,18 @@ export default {
                 if (!valid) {
                     return false;
                 } else {
-                    this.Http.post(URL.modCustomerlinkman, {
+                    this.Http.post(URL.replyCustomer, {
                         params: {
-                            customerNo: this.msgx.customerNo,
-                            linkman: this.msgx.linkman,
-                            phone: this.msgx.phone,
+                            customerNo: this.msg.customerNo,
+                            reason: this.msgx.relieve,
+                            status: 3,
                             supplierNo: this.msg.supplierNo
                         }
                     }).then((re) => {
-                        if (re.data) {
+                        if (re.code === 'SUCCESS') {
                             this.$notify({
                                 title: '成功',
-                                message: '修改成功',
+                                message: '解除成功',
                                 type: 'success'
                             });
                             this.$emit('refresh');

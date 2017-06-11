@@ -93,14 +93,6 @@ html,body{
     white-space: nowrap;
 }
 
-.paddingTop{
-    padding-top: 1.95rem;
-}
-
-.el-form-item{
-margin-bottom: 0;
-}
-
 .toolbar {
     background: #f2f2f2;
     padding: 10px;
@@ -109,7 +101,10 @@ margin-bottom: 0;
         margin-bottom: 0;
     }
 }
-
+td{
+    padding-top:5px;
+    padding-bottom:5px;
+}
 .w100 {
     width: 100px !important;
 }
@@ -149,6 +144,12 @@ margin-bottom: 0;
 .w280 {
     width: 280px !important;
 }
+.w300 {
+    width: 300px !important;
+}
+.w400 {
+    width: 400px !important;
+}
 .mgr5{
     margin-right:5px;
 }
@@ -169,4 +170,21 @@ margin-bottom: 0;
 }
 .Silver{
     color:#8492A6
+}
+
+
+// element全局样式改写
+.el-dialog__footer{
+        border-top: 1px solid #e9eaec;
+}
+.el-dialog__header{
+    border-bottom: 1px solid #e9eaec;
+    padding: 14px 16px;
+    line-height: 1;
+}
+.el-dialog__body{
+    padding: 20px 20px 10px 20px;
+}
+.el-form-item{
+    margin-bottom: 0;
 }

@@ -1,6 +1,7 @@
 ﻿import axios from 'axios';
 import CONFIG from '../config/app.config';
 import iView from 'iview';
+import { Message } from 'element-ui';
 class Interceptor {
   // 对请求数据做些什么
     request () {
@@ -59,6 +60,14 @@ class Interceptor {
                     return response.data;
                 } else if (response.data.code === 'SESSION_EXPIRED' || response.data.code === '5000') {
                     return Promise.reject(response);
+                } else {
+                    Message({
+                        showClose: true,
+                        message: response.data.message,
+                        type: 'error',
+                        duration: 0
+                    });
+                    return response.data;
                 }
             }
             return response;
