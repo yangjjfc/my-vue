@@ -24,7 +24,7 @@
                 </el-form>
             </el-col>
             <el-col :span="24">
-                <el-table :data="tableDate" border style="width: 100%">
+                <el-table :data="tableDate" border style="width: 100%"  @sort-change="sort">
                     <el-table-column prop="customerName" label="客户名称" width="350">
                         <template scope="scope">
                             <ul class="customerName_content">
@@ -90,9 +90,9 @@
                             </div>
                         </template>
                     </el-table-column>
-                    <el-table-column prop="productNum" label="产品数量" width="110" align="center">
+                    <el-table-column prop="productNum" label="产品数量" width="130" align="center" sortable="custom">
                     </el-table-column>
-                    <el-table-column prop="applyTime" label="添加时间" width="130" align="center">
+                    <el-table-column prop="applyTime" label="添加时间" width="130" align="center" sortable="custom">
                     </el-table-column>
                     <el-table-column label="状态" width="110" align="center">
                         <template scope="scope">
@@ -142,6 +142,8 @@ export default {
             showrelieveUser: false, // 显示解除用户
             relieveUserMsg: null, // 显示解除用户数据
             modal1: false,
+            orderBy: 'desc',
+            orderField: 'apply_time',
             users: [],
             total: 0,
             pageSize: 20,
@@ -179,13 +181,13 @@ export default {
     },
     methods: {
         // 获取列表
-        getList (pageIndex = this.pageIndex, pageSize = this.pageSize) {
+        getList (pageIndex = this.pageIndex, pageSize = this.pageSize, orderBy = this.orderBy, orderField = this.orderField) {
             this.Http.post('scm.supplier.queryCustomers',
                 {
                     'params': {
                         'keywords': this.from.keywords,
-                        'orderBy': 'desc',
-                        'orderField': 'apply_time',
+                        'orderBy': orderBy,
+                        'orderField': orderField,
                         'status': this.from.result.value,
                         'pageIndex': pageIndex,
                         'pageSize': pageSize
@@ -214,12 +216,32 @@ export default {
             this.showrelieveUser = true;
             this.relieveUserMsg = {...msg, relieve: ''};// es7对象扩展
         },
+        // 重置
         reset () {
             this.pageIndex = 1;
+            this.orderField = 'apply_time';
+            this.orderBy = 'desc';
             this.from.keywords = '';
             this.from.result.value = -1;
             this.getList(1);
+        },
+        // 排序
+        sort ({column, prop, order}) {
+            if (prop === 'productNum') {
+                this.orderField = 'product_num';
+            } else if (prop === 'applyTime') {
+                this.orderField = 'apply_time';
+            }
+            if (order === 'descending') {
+                this.orderBy = 'desc';
+            } else if (order === 'ascending') {
+                this.orderBy = 'asc';
+            }
+            if (order) {
+                this.getList(1);
+            }
         }
+
     },
     mounted () {
         this.getList();

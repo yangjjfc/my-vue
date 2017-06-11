@@ -31,7 +31,11 @@ export default {
     data () {
         return {
             myshow: this.showx, // 是否显示弹框
-            msgx: this.msg // 数据
+            msgx: {
+                customerName: '',
+                linkman: '',
+                phone: ''
+            } // 数据
         };
     },
     methods: {

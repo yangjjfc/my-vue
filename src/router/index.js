@@ -4,7 +4,7 @@ const charts = r => require.ensure([], () => r(require('../pages/echarts/echarts
 import Auth from '../pages/auth/Auth';
 export default [
     {
-        path: '/', redirect: '/dashboard'
+        path: '/', redirect: '/auth'
     },
     {
         path: '/auth',

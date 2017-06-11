@@ -74,8 +74,8 @@ export default {
     },
     methods: {
         // 确认
-        getData (pageIndex = this.pageIndex, pageSize = this.pageSize) {
-            return this.Http.post(URL.queryChoosedCustomers, {
+        async getData (pageIndex = this.pageIndex, pageSize = this.pageSize) {
+            return await this.Http.post(URL.queryChoosedCustomers, {
                 params: {
                     keywords: this.keywords,
                     pageIndex: pageIndex,
@@ -84,13 +84,16 @@ export default {
             });
         },
         // 查询
-        view (x, y) {
-            this.getData(x, y).then((re) => {
+        async view (x, y) {
+            return await this.getData(x, y).then((re) => {
                 this.pageIndex = re.data.pageIndex;
                 this.pageSize = re.data.pageSize;
                 this.total = re.data.total;
                 if (re.data.rows) {
-                    this.msgx = re.data.rows;
+                    this.msgx = re.data.rows.map((item) => {
+                        item.finsh = false;
+                        return item;
+                    });
                 }
             });
         },
@@ -118,16 +121,7 @@ export default {
     watch: {
         showx (val, oldval) {
             if (val) {
-                this.getData().then((re) => {
-                    this.pageIndex = re.data.pageIndex;
-                    this.pageSize = re.data.pageSize;
-                    this.total = re.data.total;
-                    if (re.data.rows) {
-                        this.msgx = re.data.rows.map((item) => {
-                            item.finsh = false;
-                            return item;
-                        });
-                    }
+                this.view().then(() => {
                     this.myshow = this.showx;
                 });
             }
