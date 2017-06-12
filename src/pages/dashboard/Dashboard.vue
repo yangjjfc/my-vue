@@ -240,7 +240,7 @@ $menuWidth: 180px;
 
 $menuHeight: 50px;
 
-$topColor: #1da7b5;
+$topColor: #20a0ff;
 
 .container {
 

@@ -1,200 +1,152 @@
 <template>
     <div>
-        <div class="demo-upload-list demo-upload-block" v-for="item in uploadList">
-            <template v-if="item.status === 'finished'">
-                <a :href="item.fullUrl" v-boxer="item.fullUrl">
-                    <img :src="item.thumbnail">
-                </a>
-                <div class="demo-upload-list-cover">
-                    <Icon type="ios-close-empty" @click.native="handleRemove(item)"></Icon>
-                </div>
-            </template>
-            <template v-else>
-                <Progress v-if="item.showProgress" :percent="item.percentage" hide-info></Progress>
-            </template>
-        </div>
-        <div class="demo-upload-block">
-            <Upload ref="upload"
-                    :show-upload-list="false" :default-file-list="defaultList" :on-success="handleSuccess" :format="['jpg','jpeg','png','pdf']" :max-size="5120"
-                    :on-format-error="handleFormatError" :on-exceeded-size="handleMaxSize" :before-upload="handleBeforeUpload" multiple type="drag" :action="config.IMAGE_UPLOAD">
-                <div>
-                    <Icon type="camera" size="20"></Icon>
-                </div>
-            </Upload>
-        </div>
+    <el-upload :action="action" :list-type="type" :headers="headers"
+     :on-success="success" 
+     :on-error="errors"
+     :on-preview="review" 
+     :before-upload="beforeUpload" 
+     :multiple="multiple" :drag="drag" :file-list="fileLists" :on-remove="remove">
+        <i class="el-icon-plus"></i>
+    </el-upload>
+    <div v-show="false" ref="boxer">
+        <a v-for="(item,index) in fileLists" :href="item.fullUrl" :data-uid="item.uid"  :key="item.fullUrl" v-boxer="item.fullUrl"></a>
+    </div>
     </div>
 </template>
-<script type="text/javascript">
-    import CONFIG from '../config/app.config';
-    import '../directive/vueDirective.js';
-    import Utils from '@/services/Utils';
-    let pdf = require('@/assets/images/pdf.png');
-    let noimage = require('@/assets/images/noimage.png');
-    export default {
-        name: 'FileUpload',
-        data () {
+<script>
+import $ from 'jquery';
+import '../directive/vueDirective.js'; // jq boxer指令
+import { changeImgSize, getFileType } from './global.common'; // 文件格式
+import { mapGetters } from 'vuex';
+import CONFIG from '../config/app.config'; // 配置
+import pdf from '@/assets/images/pdf.png'; // daf
+export default {
+    data () {
+        return {
+            action: CONFIG.IMAGE_UPLOAD, // 上传地址
+            type: 'picture-card', // 显示类型
+            multiple: true, // 支持多张上传
+            fileLists: [],  // 文件地址[{name,url}]
+            headers: null, // 添加头
+            drag: false // 是否支持拖拽上传
+        };
+    },
+    props: ['files'],
+    computed: {
+        ...mapGetters([
+            'token'
+        ])
+    },
+    mounted () {
+        this.headers = {
+            jtoken: this.token
+        };
+        let src = (typeof this.files === 'string' ? [this.files] : (this.files instanceof Array ? this.files : null));
+        src.forEach(item => {
+            this.fileLists.push(this.formatFile(item));
+        });
+    },
+    watch: {
+
+    },
+    methods: {
+        // 上传前
+        beforeUpload (file) {
+            // 文件类型
+            if (getFileType(file.name) === 'false') {
+                this.$notify.error({
+                    title: '错误',
+                    message: '文件 ' + file.name + ' 格式不正确。'
+                });
+                return false;
+            }
+            // 文件大小
+            const isLt2M = file.size / 1024 / 1024 < 5;
+            if (!isLt2M) {
+                this.$notify.error({
+                    title: '错误',
+                    message: '文件大小不能超过 5MB。'
+                });
+                return false;
+            }
+        },
+        // 格式化文件
+        formatFile (item, uid) {
+            let thumbnail;
+            switch (getFileType(item)) {
+            case 'image':
+                thumbnail = CONFIG.IMAGE_DOWNLOAD + changeImgSize(item);
+                break;
+            case 'pdf':
+                thumbnail = pdf;
+                break;
+            default:
+                break;
+            }
             return {
-                defaultList: [],
-                imgName: '',
-                maxLength: 5,
-                visible: false,
-                uploadList: [
-                    {
-                        'name': '',
-                        'thumbnail': '',
-                        'fullUrl': ''
-                    }
-                ],
-                config: CONFIG
+                uid: (uid || parseInt(Math.random() * 1000000000)),
+                url: thumbnail,
+                fullUrl: CONFIG.IMAGE_DOWNLOAD + item
             };
         },
-        // 传入文件列表->双向绑定  ， 上传失败回调 ，上传成功回调 ， 输出格式 string array
-        props: {
-            removeCallback: Function,
-            successCallback: Function,
-            exportType: String,
-            max: {
-                type: [Number, String]
-            },
-            fileList: {
-                type: Array,
-                default: []
-            }
+        // 点击放大镜查看
+        review (file) {
+            $(this.$refs.boxer).find('[data-uid=' + file.uid + ']').trigger('click');
         },
-        methods: {
-            handleView (name) {
-                this.imgName = name;
-                this.visible = true;
-            },
-            handleRemove (file) {
-                // 从 upload 实例删除数据
-                const fileList = this.$refs.upload.fileList;
-                this.$refs.upload.fileList.splice(fileList.indexOf(file), 1);
-                this.removeCallback && this.removeCallback(file);
-                this.synchronization();
-            },
-            // 同步
-            synchronization: function () {
-                let list = this.uploadList.map(function (item) {
-                    return item.url;
-                });
-                this.exportType && this.exportType.toLowerCase() === 'string' && (list += '');
-                this.$emit('update:fileList', list);
-            },
-            // 格式化文件
-            formatFile (item, name) {
-                var self = this,
-                    thumbnail;
-                switch (Utils.getFileType(item)) {
-                case 'image':
-                    thumbnail = self.config.IMAGE_DOWNLOAD + item;
-                    break;
-                case 'pdf':
-                    thumbnail = pdf;
-                    break;
-                default :
-                    thumbnail = noimage;
-                    break;
+        // 上传失败错误
+        errors () {
+            this.$notify.error({
+                title: '错误',
+                message: '文件上传失败。'
+            });
+        },
+        // 上传成功
+        success (response, file, fileList) {
+            let res = JSON.parse(response);
+            this.fileLists.push(this.formatFile(res.data, file.uid));
+        },
+        // 删除
+        remove (file, fileList) {
+            if (!file) {
+                return;
+            }
+            let files = this.fileLists;
+            this.fileLists = [];
+            for (let val of files) {
+                if (file.uid !== val.uid) {
+                    this.fileLists.push(val);
                 }
-                return {
-                    name: name || '',
-                    url: item,
-                    status: 'finished',
-                    thumbnail: thumbnail,
-                    fullUrl: self.config.IMAGE_DOWNLOAD + item
-                };
-            },
-            handleSuccess (res, file) {
-                const url = JSON.parse(res).data,
-                    obj = this.formatFile(url, file.name);
-                file.thumbnail = obj.thumbnail;
-                file.fullUrl = obj.fullUrl;
-                file.url = obj.url;
-                this.successCallback && this.successCallback(file);
-                this.synchronization();
-            },
-            handleFormatError (file) {
-                this.$Notice.warning({
-                    title: '文件格式不正确',
-                    desc: '文件 ' + file.name + ' 格式不正确，请上传 jpg 或 png 格式的图片。'
-                });
-            },
-            handleMaxSize (file) {
-                this.$Notice.warning({
-                    title: '超出文件大小限制',
-                    desc: '文件 ' + file.name + ' 太大，不能超过 5M。'
-                });
-            },
-            handleBeforeUpload () {
-                const check = this.uploadList.length < this.maxLength;
-                if (!check) {
-                    this.$Notice.warning({
-                        title: '最多只能上传 ' + this.maxLength + ' 张图片。'
-                    });
-                }
-                return check;
             }
-        },
-        created () {
-            this.maxLength = Math.round(this.max);
-            if (this.fileList && this.fileList.length) {
-                this.fileList = typeof this.fileList === 'string' ? this.fileList.split(',') : this.fileList;
-                this.defaultList = this.fileList.map((item) => this.formatFile(item));
-            }
-        },
-        mounted () {
-            this.uploadList = this.$refs.upload.fileList;
         }
-    };
+    }
+};
 </script>
 
-<style lang="scss" scoped rel="stylesheet/scss">
-    .demo-upload-block {
-        display: inline-block;
-        width: 90px;
-        height: 90px;
-        line-height: 90px;
-    }
-
-    .demo-upload-list {
-        text-align: center;
-        line-height: 90px;
-        border: 1px solid transparent;
-        border-radius: 4px;
-        overflow: hidden;
-        background: #fff;
-        position: relative;
-        box-shadow: 0 1px 1px rgba(0, 0, 0, .2);
-        margin-right: 4px;
-    }
-
-    .demo-upload-list img {
-        width: 100%;
-        height: 100%;
-    }
-
-    .demo-upload-list-cover {
-        display: block;
-        position: absolute;
-        top: 0;
-        right: 0;
-        width: 14px;
-        height: 14px;
-        padding: 2px;
-        border-radius: 50%;
-        background-color: rgba(255, 0, 0, .8);
-        opacity: .4;
-        line-height: 12px;
-    }
-
-    .demo-upload-list:hover .demo-upload-list-cover {
-        opacity: 1;
-    }
-
-    .demo-upload-list-cover i {
-        color: #fff;
-        font-size: 14px;
-        cursor: pointer;
-        line-height: 11px;
-    }
+<style lang="scss"  rel="stylesheet/scss">
+$width:100px;
+.el-upload--picture-card {
+    background-color: #fbfdff;
+    border: 1px dashed #c0ccda;
+    border-radius: 6px;
+    box-sizing: border-box;
+    width: $width;
+    height: $width;
+    cursor: pointer;
+    line-height: $width;
+    vertical-align: top;
+}
+.el-upload-list--picture-card .el-upload-list__item {
+    overflow: hidden;
+    background-color: #fff;
+    border: 1px solid #c0ccda;
+    border-radius: 6px;
+    box-sizing: border-box;
+    width: $width;
+    height: $width;
+    margin: 0 8px 8px 0;
+    display: inline-block;
+}
 </style>
+ 
+ 
+ 

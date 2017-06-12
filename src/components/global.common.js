@@ -34,3 +34,35 @@ export const parseNum = (num) => {
     }
     return list.reverse().join('');
 };
+/**
+ *
+ * @param {*文件上传支持的类型} item
+ */
+export const getFileType = (item) => {
+    // 判断是否是图片
+    let strFilter = ['jpeg', 'gif', 'jpg', 'png', 'bmp', 'pic'];
+    let strPostfix;
+    if (!item) {
+        return null;
+    }
+    if (item.indexOf('.') > -1) {
+        strPostfix = item.split('.').pop().toLowerCase();
+        if (~strFilter.indexOf(strPostfix)) {
+            return 'image';
+        } else if (~['pdf'].indexOf(strPostfix)) {
+            return 'pdf';
+        } else {
+            return 'false'; // 不支持的文件类型
+        }
+    }
+    return null;
+};
+/**
+ *
+ * @param {*改变图片大小} src
+ * @param {*} size
+ */
+export const changeImgSize = (src, size = '100x100') => {
+    let i = src.lastIndexOf('.');
+    return (src = src.substring(0, i) + '_' + size + src.substring(i));
+};
