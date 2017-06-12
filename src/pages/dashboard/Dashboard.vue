@@ -120,7 +120,7 @@ import {
 
 import User from '@/services/User';
 
-import CONFIG from '@/config/app.config';
+// import CONFIG from '@/config/app.config';
 
 export default {
 
@@ -208,10 +208,9 @@ export default {
 
     mounted () {
         User.msg = User.msg || {};
-
         this.sysUserName = User.msg.enterpriseName;
-
-        this.sysUserAvatar = CONFIG.IMAGE_DOWNLOAD + User.msg.enterpriseLogo;
+        // this.sysUserAvatar = CONFIG.IMAGE_DOWNLOAD + User.msg.enterpriseLogo;
+        this.sysUserAvatar = 'http://dfs.test.cloudyigou.com/dfs/s2/M00/25/39/rB4r9Vk3mwWAdctcAAFf5pjzdHU212_100x100.jpg';
     },
 
     created () {

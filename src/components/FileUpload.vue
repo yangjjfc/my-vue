@@ -3,12 +3,14 @@
     <el-upload :action="action" :list-type="type" :headers="headers"
      :on-success="success" 
      :show-file-list="show"
+     class="upload-demo"
      :on-error="errors"
      :on-preview="review" 
      :before-upload="beforeUpload" 
      :multiple="multiple" :drag="drag" :file-list="fileLists" :on-remove="remove" :class="classx">
         <slot name='imgs'></slot>
-        <i class="el-icon-plus"></i>
+        <el-button size="small" type="primary" v-if="!show">点击上传</el-button>
+        <i class="el-icon-plus" v-else></i>
     </el-upload>
     <div v-show="false" ref="boxer">
         <a v-for="(item,index) in fileLists" :href="item.fullUrl" :data-uid="item.uid"  :key="item.fullUrl" v-boxer="item.fullUrl"></a>
@@ -34,7 +36,7 @@ export default {
             drag: false // 是否支持拖拽上传
         };
     },
-    props: ['files', 'max', 'classx'],
+    props: ['files', 'max', 'classx', 'types', 'shows'],
     computed: {
         ...mapGetters([
             'token'
@@ -44,10 +46,19 @@ export default {
         this.headers = {
             jtoken: this.token
         };
+        // 填充图片
         let src = (typeof this.files === 'string' ? [this.files] : (this.files instanceof Array ? this.files : null));
         src.forEach(item => {
             this.fileLists.push(this.formatFile(item));
         });
+        // 更换类型
+        if (this.types) {
+            this.type = this.types;
+        }
+        // 是否显示上传图片
+        if (this.shows) {
+            this.show = this.shows;
+        }
     },
     watch: {
         fileLists (val, oldval) {
@@ -77,6 +88,9 @@ export default {
                     message: '文件大小不能超过 5MB。'
                 });
                 return false;
+            }
+            if (this.fileLists.length === this.max - 1) {
+                $('.' + this.classx).find('.el-upload--picture-card').hide();
             }
             if (this.fileLists.length === this.max) {
                 this.$notify.error({
