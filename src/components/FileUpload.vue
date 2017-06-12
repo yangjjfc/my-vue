@@ -2,10 +2,12 @@
     <div>
     <el-upload :action="action" :list-type="type" :headers="headers"
      :on-success="success" 
+     :show-file-list="show"
      :on-error="errors"
      :on-preview="review" 
      :before-upload="beforeUpload" 
      :multiple="multiple" :drag="drag" :file-list="fileLists" :on-remove="remove" :class="classx">
+        <slot name='imgs'></slot>
         <i class="el-icon-plus"></i>
     </el-upload>
     <div v-show="false" ref="boxer">
@@ -25,6 +27,7 @@ export default {
         return {
             action: CONFIG.IMAGE_UPLOAD, // 上传地址
             type: 'picture-card', // 显示类型
+            show: true, // 是否默认显示
             multiple: true, // 支持多张上传
             fileLists: [],  // 文件地址[{name,url}]
             headers: null, // 添加头
