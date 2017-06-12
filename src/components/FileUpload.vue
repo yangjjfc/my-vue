@@ -5,7 +5,7 @@
      :on-error="errors"
      :on-preview="review" 
      :before-upload="beforeUpload" 
-     :multiple="multiple" :drag="drag" :file-list="fileLists" :on-remove="remove">
+     :multiple="multiple" :drag="drag" :file-list="fileLists" :on-remove="remove" :class="classx">
         <i class="el-icon-plus"></i>
     </el-upload>
     <div v-show="false" ref="boxer">
@@ -31,7 +31,7 @@ export default {
             drag: false // 是否支持拖拽上传
         };
     },
-    props: ['files'],
+    props: ['files', 'max', 'classx'],
     computed: {
         ...mapGetters([
             'token'
@@ -47,7 +47,13 @@ export default {
         });
     },
     watch: {
-
+        fileLists (val, oldval) {
+            if (this.fileLists.length === this.max) {
+                $('.' + this.classx).find('.el-upload--picture-card').hide();
+            } else {
+                $('.' + this.classx).find('.el-upload--picture-card').show();
+            }
+        }
     },
     methods: {
         // 上传前
@@ -66,6 +72,13 @@ export default {
                 this.$notify.error({
                     title: '错误',
                     message: '文件大小不能超过 5MB。'
+                });
+                return false;
+            }
+            if (this.fileLists.length === this.max) {
+                this.$notify.error({
+                    title: '错误',
+                    message: '最多上传' + this.max + '个文件'
                 });
                 return false;
             }

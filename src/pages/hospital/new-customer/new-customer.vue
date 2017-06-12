@@ -3,7 +3,7 @@
         <!--工具条-->
         <el-row>
             <el-col :span="24">
-                <FileUpload :files="files"></FileUpload>
+                <FileUpload :files="files" :max='3' classx="cert" ></FileUpload>
             </el-col> 
         </el-row>
     </section>
@@ -22,6 +22,7 @@ export default {
 };
 
 </script>
+
 
 <style lang="scss">
 
