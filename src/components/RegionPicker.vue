@@ -1,27 +1,34 @@
 <template>
-    <div>
-        <region-picker :province="province" @onchange="change" :city="city" :district="district"></region-picker>
-    </div>
+    <section>
+        <!--工具条-->
+        <el-row>
+            <el-col :span="24">
+                <FileUpload :files="files" :max='3' classx="cert" ></FileUpload>
+            </el-col> 
+            <el-col :span="24">
+                <Region-picker></Region-picker>
+            </el-col> 
+        </el-row>
+    </section>
 </template>
-<script type="text/javascript">
+<script>
+import FileUpload from '@/components/FileUpload';
+import RegionPicker from '@/components/RegionPicker';
+export default {
+    data () {
+        return {
+            files: ['s2/M00/25/3D/rB4r9Vk-TUqAC75HAA096mkXPAU869.bmp', 's2/M00/25/3D/rB4r9Vk-TUqAC75HAA096mkXPAU869.bmp']
+        };
+    },
+    components: {
+        FileUpload,
+        RegionPicker
+    }
+};
 
-    export default {
-        name: 'regionPicker',
-        data () {
-            return {
-                province: '广东', // you can set initial value or not.
-                city: 440100, // by code or name.
-                district: ''
-            };
-        },
-        components: {
-
-        },
-        methods: {
-    
-        },
-        mounted () {
-
-        }
-    };
 </script>
+
+
+<style lang="scss">
+
+</style>
