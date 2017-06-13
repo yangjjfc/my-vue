@@ -1,41 +1,36 @@
+
+
 <template>
-    <div>
-       <adderss
-       :regions="region1"
-       :vueVersion="vueVersion"
-  :province="region.province"
-  :city="region.city"
-  :district="region.district"
-  >
-</adderss>
-    </div>
+    <section>
+        <!--工具条-->
+        <el-row>
+            <el-col :span="24">
+                <FileUpload :files="files" :max='3' classx="cert" ></FileUpload>
+            </el-col> 
+            <el-col :span="24">
+                <Region-picker></Region-picker>
+            </el-col> 
+        </el-row>
+    </section>
 </template>
-<script type="text/javascript">
-import adderss from '@/components/address/address';
-import REGION_DATA from 'china-area-data';
+<script>
+import FileUpload from '@/components/FileUpload';
+import RegionPicker from '@/components/address/RegionPicker';
 export default {
     data () {
         return {
-            region: {
-                province: '广东', // you can set initial value or not.
-                city: 440100, // by code or name.
-                district: ''
-            },
-            region1: REGION_DATA,
-            vueVersion: 2
-
+            files: ['s2/M00/25/3D/rB4r9Vk-TUqAC75HAA096mkXPAU869.bmp', 's2/M00/25/3D/rB4r9Vk-TUqAC75HAA096mkXPAU869.bmp']
         };
     },
-    methods: {
-        change (msg) {
-            this.region = msg;
-        }
-
-    },
-    computed () {
-    },
     components: {
-        adderss
+        FileUpload,
+        RegionPicker
     }
 };
+
 </script>
+
+
+<style lang="scss">
+
+</style>

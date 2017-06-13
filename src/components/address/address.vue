@@ -2,64 +2,24 @@
     <div class="region-picker">
         <label class="province">
             <slot name="province"></slot>
-
-            <el-select v-model="value_provinces" :placeholder="placeholder.province" class="province-select" 
-           :required="required" :disabled="disabled"
-            @change="change('provinceSelected', $event.target.value)"
-           >
-                <el-option v-for="item in provinces" :key="item.label" :label="item.label" :value="item.value">
+            <el-select size="small" v-model="value_provinces" ref="provinceSelected" :placeholder="placeholder.province" class="province-select" :class="classx" :required="required" :disabled="disabled" @change="change1">
+                <el-option v-for="item in provinces" :key="item.label" :label="item.label" :value="item.value" :class="classx">
                 </el-option>
             </el-select>
-
-
-
-
-
-
-
-
-
-
-            <!--<select class="province-select" :value="provinceSelected" @change="change('provinceSelected', $event.target.value)" :required="required" :disabled="disabled">
-                <option value="" v-text="placeholder.province"></option>
-                <option v-for="item in provinces" :value="item" v-text="item[1]"></option>
-            </select>-->
         </label>
-        <label class="city" v-show="!auto || cities.length">
-             <el-select v-model="value_city"  class="city-select" 
-            @change="change('citySelected', $event.target.value)" :required="required && cities.length > 0" :disabled="disabled">
-                <el-option v-for="item in cities" :key="item.label" :label="item.label" :value="item.value">
+        <label class="city" ref="citySelected" v-show="!auto || cities.length">
+            <slot name="city"></slot>
+            <el-select size="small" v-model="value_city" class="city-select" @change="change2" :required="required && cities.length > 0" :disabled="disabled" :class="classx">
+                <el-option v-for="item in cities" :key="item.label" :label="item.label" :value="item.value" :class="classx">
                 </el-option>
             </el-select>
-
-
-
-
-
-
-
-
-
-            <slot name="city"></slot>
-            <!--<select class="city-select" :value="citySelected" @change="change('citySelected', $event.target.value)" :required="required && cities.length > 0" :disabled="disabled">
-                <option value="" v-text="placeholder.city"></option>
-                <option v-for="item in cities" :value="item" v-text="item[1]"></option>
-            </select>-->
         </label>
         <label class="district" v-if="!twoSelect" v-show="!auto || districts.length">
             <slot name="district"></slot>
-
- <el-select v-model="value_district"  class="district-select" 
-            @change="change('districtSelected', $event.target.value)" :required="required && districts.length > 0" :disabled="disabled">
-                <el-option v-for="item in districts" :key="item.label" :label="item.label" :value="item.value">
+            <el-select size="small" v-model="value_district" ref="districtSelected" class="district-select" @change="change3" :class="classx" :required="required && districts.length > 0" :disabled="disabled">
+                <el-option v-for="item in districts" :key="item.label" :label="item.label" :value="item.value" :class="classx">
                 </el-option>
             </el-select>
-
-
-            <!--<select class="district-select" :value="districtSelected" @change="change('districtSelected', $event.target.value)" :required="required && districts.length > 0" :disabled="disabled">
-                <option value="" v-text="placeholder.district"></option>
-                <option v-for="item in districts" :value="item" v-text="item[1]"></option>
-            </select>-->
         </label>
     </div>
 </template>
@@ -72,38 +32,46 @@ export default {
                 province: '',
                 city: '',
                 district: ''
-
             },
-            value_provinces: '',
-            value_city: '',
-            value_district: ''
+            value_provinces: '', // 省
+            value_city: '',  // 市
+            value_district: '' // 区
         };
     },
+    beforeMount () {
+        this.value_provinces = this.provinceSelected[0];
+        this.value_city = this.citySelected[0] && this.citySelected[0];
+        this.value_district = this.districtSelected[0] && this.districtSelected[0];
+    },
     watch: {
-        province () {
+        province (val) {
+            this.value_provinces = val;
             this.current.province = '';
         },
-        city () {
+        city (val) {
+            this.value_city = val;
             this.current.city = '';
         },
-        district () {
+        district (val) {
+            this.value_district = val;
             this.current.district = '';
         }
     },
     props: {
         province: {},
         city: {},
-        regions: {}, //
-        vueVersion: {}, //
         district: {},
+        regions: {
+            type: Object
+        }, // 地区源josn
         twoSelect: Boolean,
         auto: Boolean,
-        completed: Boolean,
         required: Boolean,
         disabled: Boolean,
         rootCode: {
             default: '86'
         },
+        classx: {},
         placeholder: {
             type: Object,
             default () {
@@ -116,25 +84,34 @@ export default {
         }
     },
     methods: {
-        change (field, value) {
-            console.log(field, value);
-            this[field] = value.split(',');
-            if (this.completed) {
-                this.$emit('onchange', {
-                    province: this.provinceSelected,
-                    city: this.citySelected,
-                    district: this.districtSelected
-                });
-            } else {
-                this.$emit('onchange', {
-                    province: this.provinceSelected[1],
-                    city: this.citySelected[1],
-                    district: this.districtSelected[1]
-                });
-            }
+        // 省改变
+        change1 (val) {
+            this.provinceSelected = val;
+            this.citySelected = this.cities[0] && this.cities[0].value;
+            this.districtSelected = this.districts[0] && this.districts[0].value;
+            this.setAddress();
         },
+        // 市改变
+        change2 (val) {
+            this.citySelected = val;
+            this.districtSelected = this.districts[0] && this.districts[0].value;
+            this.setAddress();
+        },
+        // 区改变
+        change3 (val) {
+            this.districtSelected = val;
+            this.setAddress();
+        },
+        // 设置地址
+        setAddress () {
+            this.$emit('onchange', {
+                province: this.provinceSelected[0],
+                city: this.citySelected[0],
+                district: this.districtSelected[0]
+            });
+        },
+        // 过滤地址
         _filter (pid) {
-            console.log(pid);
             const result = [];
             const items = this.regions[pid];
             for (let code in items) {
@@ -193,45 +170,31 @@ export default {
                 label: item[1]
             }));
         },
-        isVueNext () {
-            return true;
-        },
         provinceSelected: {
             get () {
                 return this._selected(this.rootCode, this.current.province || this.province);
             },
             set (value) {
-                if (!this.isVueNext) {
-                    this.province = this.completed ? value : value[1];
-                } else {
-                    this.current.province = value;
-                }
+                this.current.province = value;
             }
         },
         citySelected: {
             get () {
                 return this._selected(this.provinceSelected[0], this.current.city || this.city);
             },
-            set (value4) {
-                if (!this.isVueNext) {
-                    this.city = this.completed ? value4 : value4[1];
-                } else {
-                    this.current.city = value;
-                }
+            set (value) {
+                this.current.city = value;
             }
         },
         districtSelected: {
             get () {
                 return this._selected(this.citySelected[0], this.current.district || this.district);
             },
-            set (value5) {
-                if (!this.isVueNext) {
-                    this.district = this.completed ? value5 : value5[1];
-                } else {
-                    this.current.district = value;
-                }
+            set (value) {
+                this.current.district = value;
             }
         }
+
     }
 };
 </script>
