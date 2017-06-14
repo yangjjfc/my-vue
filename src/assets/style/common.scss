@@ -82,6 +82,12 @@ html,body{
 .hide{
     display: none;
 }
+.text-right{
+    text-align: right
+}
+.text-center{
+    text-align: center
+}
 
 .show{
     display: block;
@@ -159,10 +165,10 @@ td{
 .Blue{
     color:#20A0FF
 }
-.Success{
+.Success,.green{
     color:#13CE66
 }
-.Warning{
+.Warning,.orange{
     color:#F7BA2A
 }
 .Danger{
@@ -170,6 +176,9 @@ td{
 }
 .Silver{
     color:#8492A6
+}
+.grey{
+    color:#999;
 }
 
 

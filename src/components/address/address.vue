@@ -194,7 +194,6 @@ export default {
                 this.current.district = value;
             }
         }
-
     }
 };
 </script>

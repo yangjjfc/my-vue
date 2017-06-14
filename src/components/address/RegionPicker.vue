@@ -16,10 +16,11 @@ export default {
     props: {
         region: {
             type: Object,
-            default: {
-                province: '浙江省', // you can set initial value or not.
-                city: '杭州市', // by code or name.
-                district: '西湖区'
+            default () {
+                return { province: '浙江省', // you can set initial value or not.
+                    city: '杭州市', // by code or name.
+                    district: '西湖区'
+                };
             }
         }
     },

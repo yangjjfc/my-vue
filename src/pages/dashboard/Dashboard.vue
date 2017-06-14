@@ -36,62 +36,58 @@
 		</el-col>
 	
 		<el-col :span="24" class="main">
-	     
-			<aside :class="collapsed?'menu-collapsed':'menu-expanded'" class="sidebar">
 	
-				<!--导航菜单-->
-	
-				<el-menu :default-active="$route.path" class="el-menu-vertical-demo" unique-opened router v-show="!collapsed" theme="dark">
-					<template v-for="(item,index) in menuList" v-if="!item.hidden">
-						<el-submenu :index="index+''" v-if="item.son&&item.son.length>0">
-							<template slot="title">
+			<aside :class="collapsed?'menu-collapsed':'menu-expanded'" class="sidebar el-menu--dark">
+				<el-scrollbar tag="div" class="scrollbar-box">
+					<el-menu :default-active="$route.path" class="el-menu-vertical-demo" unique-opened router v-show="!collapsed" theme="dark">
+						<template v-for="(item,index) in menuList" v-if="!item.hidden">
+							<el-submenu :index="index+''" v-if="item.son&&item.son.length>0">
+								<template slot="title">
+									<i :class="item.icon"></i>{{item.name}}
+								</template>
+								<el-menu-item v-for="child in item.son" :index="child.state" :key="child.state" v-if="!child.hidden">{{child.name}}</el-menu-item>
+							</el-submenu>
+							<el-menu-item v-if="!item.son" :index="item.state">
 								<i :class="item.icon"></i>{{item.name}}
-							</template>
-							<el-menu-item v-for="child in item.son" :index="child.state" :key="child.state" v-if="!child.hidden">{{child.name}}</el-menu-item>
-						</el-submenu>
-						<el-menu-item v-if="!item.son" :index="item.state">
-							<i :class="item.icon"></i>{{item.name}}
-						</el-menu-item>
-					</template>
-				</el-menu>
-				<!--导航菜单-折叠后-->
-				<ul class="el-menu--dark el-menu-vertical-demo collapsed" v-show="collapsed" ref="menuCollapsed">
-					<li v-for="(item,index) in menuList" v-if="!item.hidden" class="el-submenu item">
-						<template v-if="item.son&&item.son.length>0">
-							<div class="el-submenu__title" style="padding-left: 20px;" @mouseover="showMenu(index,true)" @mouseout="showMenu(index,false)">
-								<i :class="item.icon"></i>
-							</div>
-							<ul class="el-menu submenu" :class="'submenu-hook-'+index" @mouseover="showMenu(index,true)" @mouseout="showMenu(index,false)">
-								<li v-for="child in item.son" v-if="!child.hidden" :key="child.state" class="el-menu-item" style="padding-left: 40px;" :class="$route.path==child.state?'is-active':''" @click="$router.push(child.state)">{{child.name}}</li>
-							</ul>
+							</el-menu-item>
 						</template>
-						<template v-else>
-							<li class="el-submenu">
-	
-								<div class="el-submenu__title el-menu-item" style="padding-left: 20px;height: 56px;line-height: 56px;padding: 0 20px;" :class="$route.path==item.state?'is-active':''" @click="$router.push(item.state)">
-	
+					</el-menu>
+					<!--导航菜单-折叠后-->
+					<ul class="el-menu--dark el-menu-vertical-demo collapsed" v-show="collapsed" ref="menuCollapsed">
+						<li v-for="(item,index) in menuList" v-if="!item.hidden" class="el-submenu item">
+							<template v-if="item.son&&item.son.length>0">
+								<div class="el-submenu__title" style="padding-left: 20px;" @mouseover="showMenu(index,true)" @mouseout="showMenu(index,false)">
 									<i :class="item.icon"></i>
-	
 								</div>
-	
-							</li>
-						</template>
-					</li>
-				</ul>
-				<div class="tools" @click.prevent="collapse">
-					<i :class="collapsed?'el-icon-d-arrow-right':'el-icon-d-arrow-left'"></i>
-				</div>
+								<ul class="el-menu submenu" :class="'submenu-hook-'+index" @mouseover="showMenu(index,true)" @mouseout="showMenu(index,false)">
+									<li v-for="child in item.son" v-if="!child.hidden" :key="child.state" class="el-menu-item" style="padding-left: 40px;" :class="$route.path==child.state?'is-active':''" @click="$router.push(child.state)">{{child.name}}</li>
+								</ul>
+							</template>
+							<template v-else>
+								<li class="el-submenu">
+									<div class="el-submenu__title el-menu-item" style="padding-left: 20px;height: 56px;line-height: 56px;padding: 0 20px;" :class="$route.path==item.state?'is-active':''" @click="$router.push(item.state)">
+										<i :class="item.icon"></i>
+									</div>
+								</li>
+							</template>
+						</li>
+					</ul>
+					</el-scrollbar>
+					<!--导航菜单-->
+					<div class="tools" @click.prevent="collapse">
+						<i :class="collapsed?'el-icon-d-arrow-right':'el-icon-d-arrow-left'"></i>
+					</div>
 			</aside>
 			<section class="content-container">
 				<div class="grid-content bg-purple-light">
 					<!--<el-col :span="24" class="breadcrumb-container">
-										<strong class="title">{{$route.name}}</strong>
-										<el-breadcrumb separator="/" class="breadcrumb-inner">
-											<el-breadcrumb-item v-for="item in $route.matched" :key="item.path">
-												{{ item.name }}
-											</el-breadcrumb-item>
-										</el-breadcrumb>
-									</el-col>-->
+											<strong class="title">{{$route.name}}</strong>
+											<el-breadcrumb separator="/" class="breadcrumb-inner">
+												<el-breadcrumb-item v-for="item in $route.matched" :key="item.path">
+													{{ item.name }}
+												</el-breadcrumb-item>
+											</el-breadcrumb>
+										</el-col>-->
 					<el-col :span="24" class="content-wrapper">
 						<transition name="fade" mode="out-in">
 							<router-view></router-view>
@@ -107,7 +103,6 @@
 import MENU from '@/config/menu.js';
 
 import SweetAlert from '@/services/sweetalert';
-
 import {
 
 	mapState,
@@ -209,7 +204,7 @@ export default {
     mounted () {
         User.msg = User.msg || {};
         this.sysUserName = User.msg.enterpriseName;
-        // this.sysUserAvatar = CONFIG.IMAGE_DOWNLOAD + User.msg.enterpriseLogo;
+		// this.sysUserAvatar = CONFIG.IMAGE_DOWNLOAD + User.msg.enterpriseLogo;
         this.sysUserAvatar = 'http://dfs.test.cloudyigou.com/dfs/s2/M00/25/39/rB4r9Vk3mwWAdctcAAFf5pjzdHU212_100x100.jpg';
     },
 
@@ -234,7 +229,7 @@ export default {
 };
 </script>
  
-<style scoped lang="scss">
+<style  lang="scss">
 $menuWidth: 180px;
 
 $menuHeight: 50px;
@@ -332,7 +327,15 @@ $topColor: #20a0ff;
 		overflow: hidden;
 
 		aside {
-
+			.scrollbar-box {
+				height: 100%;
+				.el-scrollbar__wrap {
+					height: 100%;
+					.el-scrollbar__view {
+						height: 100%;
+					}
+				}
+			}
 			position: relative;
 
 			flex: 0 0 $menuWidth;
