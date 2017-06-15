@@ -62,6 +62,8 @@ export default {
                         callback();
                     }
                 });
+            } else if (!this.pass_state) {
+                callback(new Error('密码错误'));
             } else {
                 this.pass_state = true;
                 callback();
@@ -87,8 +89,10 @@ export default {
                         callback();
                     }
                 });
+            } else if (!this.malis_state) {
+                callback(new Error('该邮箱已占用'));
             } else {
-                this.pass_state = true;
+                this.malis_state = true;
                 callback();
             }
         };

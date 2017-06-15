@@ -62,6 +62,8 @@ export default {
                         callback();
                     }
                 });
+            } else if (!this.pass_state) {
+                callback(new Error('密码错误'));
             } else {
                 this.pass_state = true;
                 callback();
@@ -87,8 +89,10 @@ export default {
                         callback();
                     }
                 });
+            } else if (!this.phone_state) {
+                callback(new Error('该手机号已占用'));
             } else {
-                this.pass_state = true;
+                this.phone_state = true;
                 callback();
             }
         };
