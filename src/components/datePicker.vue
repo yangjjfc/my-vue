@@ -34,33 +34,31 @@ export default {
     },
     props: {
         placeholder: {},
-        readonly: {
+        readonly: { // 只读
             type: Boolean,
             default () {
                 return false;
             }
         },
-        editable: {
+        editable: { // 是否可编辑
             type: Boolean,
             default () {
                 return false;
             }
         },
-        type: {
+        type: { // 日期类型
             type: String,
             default () {
                 return 'date';
             }
         },
-        fulltime: {
+        fulltime: { // 开始结束都有
+            type: Boolean,
             default () {
                 return true;
             }
         },
-        classx: {
-
-        }
-
+        classx: String // 自定义class
     },
     watch: {
         // 开始禁用区域

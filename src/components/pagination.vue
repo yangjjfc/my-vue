@@ -11,7 +11,19 @@ export default {
         };
     },
   // 需要传的参数
-    props: ['total', 'pageSize', 'pageIndex'],
+    props: {
+        total: { // 总页数
+            type: [String, Number],
+            required: true
+        },
+        pageSize: { // 单页显示数量
+            type: [String, Number],
+            required: true
+        },
+        pageIndex: { // 页码
+            type: [String, Number]
+        }
+    },
     methods: {
         // 改变页码
         changePage (page) {

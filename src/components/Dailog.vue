@@ -1,7 +1,7 @@
 //基本的dailog弹框组件
 <template>
     <section>
-        <el-dialog :title="title" :visible.sync="shows" :size="size" :custom-class="classx" :close-on-click-modal="close" :close-on-press-escape="close" :before-close="cancel">
+        <el-dialog :title="title" :visible.sync="shows" :size="size" :custom-class="classx" custom-class="dailog-box" :close-on-click-modal="close" :close-on-press-escape="close" :before-close="cancel">
             <slot name='content'></slot>
             <span slot="footer" class="dialog-footer" >
                 <el-button @click.sync="cancel">关闭</el-button>
@@ -13,14 +13,44 @@
 
 <script>
 export default {
-    name: 'table',
+    name: 'Dailog',
     data () {
         return {
-            shows: this.show, // 是否显示dailog
-            close: false   // 禁用某些操作
+            shows: false
         };
     },
-    props: ['show', 'title', 'size', 'classx', 'hide'],
+    props: {
+        show: { // 是否显示dailog
+            type: Boolean,
+            required: true,
+            default () {
+                return false;
+            }
+        },
+        title: {
+            type: String,
+            required: true
+        },
+        size: { // dailog大小
+            type: String,
+            default () {
+                return 'small';
+            }
+        },
+        close: { // 禁用某些操作,可配置
+            type: Boolean,
+            default () {
+                return false;
+            }
+        },
+        classx: String, // 自定义class
+        hide: String // 隐藏按钮
+    },
+    watch: {
+        show (val, oldval) {
+            this.shows = this.show; // 监听show的变化
+        }
+    },
     methods: {
         // 确认事件
         ok () {
@@ -32,16 +62,14 @@ export default {
             this.$emit('update:show', false); // 更新父组件shows
             this.$emit('reset');
         }
-    },
-    watch: {
-        show (val, oldval) {
-            this.shows = this.show; // 监听show的变化
-        }
     }
+
 };
 
 </script>
 
-<style scoped lang="scss" rel="stylesheet/scss">
-
+<style  lang="scss" rel="stylesheet/scss">
+  .dailog-box{
+      min-width: 560px;
+  }
 </style>

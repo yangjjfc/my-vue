@@ -10,7 +10,7 @@
                                 <span>用户名</span>
                             </el-col>
                             <el-col :span="12">
-                                <span class="Silver">{{user.userName}}</span>
+                                <span class="Silver">{{user.loginAccount}}</span>
                             </el-col>
                             <el-col :span="6">
                             </el-col>
@@ -22,10 +22,10 @@
                                 <span>真实姓名</span>
                             </el-col>
                             <el-col :span="12">
-                                <span class="Silver">{{user.loginAccount}}</span>
+                                <span class="Silver">{{user.userName}}</span>
                             </el-col>
                             <el-col :span="6" class="text-right right">
-                                <span class="text-button" @click="changeName">修改姓名</span>
+                                <span class="text-button"  @click="changeNames(user.userName)">修改姓名</span>
                             </el-col>
                         </el-row>
                     </li>
@@ -38,7 +38,7 @@
                                 <span class="Silver">已设置</span>
                             </el-col>
                             <el-col :span="6" class="text-right right">
-                                <span class="text-button" @click="changePasswd">修改密码</span>
+                                <span class="text-button"  @click="changePasswds">修改密码</span>
                             </el-col>
                         </el-row>
                     </li>
@@ -55,7 +55,7 @@
                                     <span class="Success" v-if="user.phone">已设置</span>
                                     <span class="orange" v-else>未绑定</span>
                                     <span> | </span>
-                                    <span class="text-button" @click="changePhone">{{user.phone?'修改手机':'绑定手机'}}</span>
+                                    <span class="text-button" @click="changeEmails">{{user.phone?'修改手机':'绑定手机'}}</span>
                                 </div>
                             </el-col>
                         </el-row>
@@ -73,7 +73,7 @@
                                     <span class="Success" v-if="user.email">已设置</span>
                                     <span class="orange" v-else>未绑定</span>
                                     <span> | </span>
-                                    <span class="text-button" @click="changeEmail">{{user.email?'修改邮箱':'绑定邮箱'}}</span>
+                                    <span class="text-button" >{{user.email?'修改邮箱':'绑定邮箱'}}</span>
                                 </div>
                             </el-col>
                         </el-row>
@@ -87,18 +87,28 @@
                                 <span class="Silver">{{user.lastLoginTime}}</span>
                             </el-col>
                             <el-col :span="6" class="text-right right">
-                                <span class="text-button" @click="changeDetail">查看日志</span>
+                                <span class="text-button" >查看日志</span>
                             </el-col>
                         </el-row>
                     </li>
                 </ul>
             </el-col>
             <el-col :span="24">
+                <change-name :showx.sync="changeNameShow" @refresh="getUserInfo" :msgx="changeNameMsg"></change-name>
+            </el-col>
+            <el-col :span="24">
+                <change-passwd :showx.sync="changePasswdShow" @refresh="getUserInfo" ></change-passwd>
+            </el-col>
+            <el-col :span="24">
+                <change-email :showx.sync="changeEmailShow"   @refresh="getUserInfo"></change-email>
             </el-col>
         </el-row>
     </section>
 </template>
 <script>
+import changeName from './mods/changeName';
+import changePasswd from './mods/changePasswd';
+import changeEmail from './mods/changeEmail';
 import { mapGetters } from 'vuex';
 const URL = {
     findUserByNoForWeb: 'ypt.open.user.findUserByNoForWeb' // 登陆用户的信息
@@ -107,7 +117,11 @@ export default {
     name: 'account',
     data () {
         return {
-            user: {}
+            user: {},
+            changeNameShow: false, // 更改姓名
+            changeNameMsg: {}, // 更改姓名
+            changePasswdShow: false, // 更改密码
+            changeEmailShow: false // 更改邮箱
         };
     },
     computed: {
@@ -126,14 +140,25 @@ export default {
                 }
                 this.user = msg.data;
             });
+        },
+        changeNames (data) {
+            this.changeNameShow = true;
+            this.changeNameMsg = {'rename': data};
+        },
+        changePasswds () {
+            this.changePasswdShow = true;
+        },
+        changeEmails () {
+            this.changeEmailShow = true;
         }
     },
     mounted () {
-        console.log(this.userno);
         this.getUserInfo();
     },
     components: {
-
+        changeName,
+        changePasswd,
+        changeEmail
     }
 };
 

@@ -36,8 +36,7 @@
 <script type="text/javascript">
 import CONFIG from '@/config/app.config';
 import { mapState, mapActions } from 'vuex';
-import CryptoJS from '@//assets/js/aes/aes-min.min.js';
-import SHA256 from '@/assets/js/sha256/sha256.min.js';
+import {encryption} from '@/components/global.common';
 const URL = {
     VERIFY_CODE: '/verifyCode'
 };
@@ -85,14 +84,8 @@ export default {
             let xflag = false;
             let self = this;
             let clientid = this.userInfo ? this.userInfo.clientId : null;
-            let _sendData = CryptoJS.enc.Utf8.parse(SHA256(self.form.password));
-            let _encrypted = CryptoJS.AES.encrypt(_sendData, CryptoJS.enc.Utf8.parse(clientid), {
-                iv: CryptoJS.enc.Utf8.parse(this.userInfo.token),
-                mode: CryptoJS.mode.CBC,
-                padding: CryptoJS.pad.Iso10126
-            });
-            let param;
-
+            let token = this.userInfo ? this.userInfo.token : null;
+            let password = self.form.password;
             if (!/^[a-zA-Z0-9_-]{6,20}$/.test(self.form.username)) {
                 xflag = true;
                 self.errorMsg = self.form.username === '' ? '请输入用户名' : '用户名格式不正确';
@@ -109,8 +102,8 @@ export default {
                 self.errorMsg = self.form.verifycode === '' ? '请输入验证码' : '验证码格式不正确';
                 return;
             }
-            param = Object.assign({}, self.form, {
-                password: CryptoJS.enc.Base64.stringify(_encrypted.ciphertext)
+            let param = Object.assign({}, self.form, {
+                password: encryption(password, clientid, token)
             });
             if (!xflag) {
                 this.userLogin(param).then(function (msg) {

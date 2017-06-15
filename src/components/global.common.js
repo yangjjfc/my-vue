@@ -66,3 +66,17 @@ export const changeImgSize = (src, size = '100x100') => {
     let i = src.lastIndexOf('.');
     return (src = src.substring(0, i) + '_' + size + src.substring(i));
 };
+
+/**
+ * 密码加密处理
+ */
+import CryptoJS from '@/assets/js/aes/aes-min.min.js';
+import SHA256 from '@/assets/js/sha256/sha256.min.js';
+export const encryption = (password, clientid, token) => {
+    let _encrypted = CryptoJS.AES.encrypt(CryptoJS.enc.Utf8.parse(SHA256(password)), CryptoJS.enc.Utf8.parse(clientid), {
+        iv: CryptoJS.enc.Utf8.parse(token),
+        mode: CryptoJS.mode.CBC,
+        padding: CryptoJS.pad.Iso10126
+    });
+    return CryptoJS.enc.Base64.stringify(_encrypted.ciphertext);
+};

@@ -28,15 +28,38 @@ export default {
     data () {
         return {
             action: CONFIG.IMAGE_UPLOAD, // 上传地址
-            type: 'picture-card', // 显示类型
-            show: true, // 是否默认显示
             multiple: true, // 支持多张上传
             fileLists: [],  // 文件地址[{name,url}]
             headers: null, // 添加头
             drag: false // 是否支持拖拽上传
         };
     },
-    props: ['files', 'max', 'classx', 'types', 'shows'],
+    // props: ['files', 'max', 'classx', 'types', 'shows'],
+    props: {
+        files: { // 图片地址
+            type: [String, Array],
+            required: true
+        },
+        max: { // 最大上传数量
+            type: Number,
+            default () {
+                return 5;
+            }
+        },
+        classx: String, // 自定义class
+        type: { // 显示类型
+            type: String,
+            default () {
+                return 'picture-card';
+            }
+        },
+        show: {   // 是否显示上传图片 默认显示
+            type: Boolean,
+            default () {
+                return true;
+            }
+        }
+    },
     computed: {
         ...mapGetters([
             'token'
@@ -51,14 +74,6 @@ export default {
         src.forEach(item => {
             this.fileLists.push(this.formatFile(item));
         });
-        // 更换类型
-        if (this.types) {
-            this.type = this.types;
-        }
-        // 是否显示上传图片
-        if (this.shows) {
-            this.show = this.shows;
-        }
     },
     watch: {
         fileLists (val, oldval) {
