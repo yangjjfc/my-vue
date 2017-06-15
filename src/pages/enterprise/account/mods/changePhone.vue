@@ -1,12 +1,12 @@
 <template>
     <section>
-        <dailog size="tiny" :show.sync="myshow" classx="change-name" :title="title"  @ok="quire" @reset="reset">
-            <el-form slot="content"  :rules="rules" label-width="100px" ref="forms" class="demo-dynamic" :model="msgx" :error="132">
+        <dailog size="tiny" :show.sync="myshow" classx="change-name" :title="title" @ok="quire" @reset="reset">
+            <el-form slot="content"  :rules="rules" label-width="100px" ref="forms" class="demo-dynamic" :model="msgx">
                 <el-form-item label="登录密码" prop="password">
                     <el-input placeholder="登录密码" type="password" v-model.trim="msgx.password"></el-input>
                 </el-form-item>
-                <el-form-item label="新邮箱" prop="email">
-                    <el-input placeholder="新邮箱" type="email" v-model.trim="msgx.email"></el-input>
+                <el-form-item label="新手机号" prop="phone">
+                    <el-input placeholder="新手机号" type="phone" v-model.trim="msgx.phone"></el-input>
                     <el-button type="info" :disabled="true" v-if="showResend" size="small">重新发送<i>{{timeouts}}</i>s</el-button>
                     <el-button @click.prevent="sendCode" type="info" v-else :disabled="statex" size="small">发送验证码</el-button>
                 </el-form-item>
@@ -20,16 +20,16 @@
 
 <script>
 const URL = {
-    CHANGE_EMAIL: 'ypt.open.user.modifyEmailForWeb', // 修改邮箱
-    SEND_EMAIL_CODE: 'ypt.open.userCenter.sendEmailVerificationCode', // 发送邮箱验证码
+    CHANGE_PHONE: 'ypt.open.user.modifyMobilePhoneForWeb', // 修改邮箱
+    SEND_PHONE_CODE: 'ypt.verification.sendMobileVerificationCodeEx', // 发送短信验证码
     CHECKPASSWORD: 'ypt.user.checkPassword', // 判断密码是否正确
-    EXISTEMAIL: 'ypt.open.user.isExistEmailForWeb' // 判断邮箱是否存在
+    ISEXIST: 'ypt.open.user.isExistMobileForWeb' // 判断手机号是否存在
 };
 import dailog from '@/components/Dailog';
 import { mapGetters } from 'vuex';
 import {encryption} from '@/components/global.common';
 export default {
-    name: 'changeEmail',
+    name: 'changePhone',
     props: {
         showx: {
             type: Boolean,
@@ -70,20 +70,20 @@ export default {
         // 邮箱
         let validateemail = async (rule, value, callback) => {
             if (value === '') {
-                this.malis_state = false;
-                callback(new Error('请输入新邮箱'));
-            } else if (!/^(?=\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$).{5,50}$/.test(value)) {
-                this.malis_state = false;
-                callback(new Error('新邮箱格式不正确,5-50字符之间'));
+                this.phone_state = false;
+                callback(new Error('请输入新手机号'));
+            } else if (!/^(((13[0-9]{1})|(14[0-9]{1})|(15[0-9]{1})|(17[0-9]{1})|(18[0-9]{1}))+\d{8})$/.test(value)) {
+                this.phone_state = false;
+                callback(new Error('新手机号格式有误,长度11个字符'));
             } else if (this.send_state) {
-                await this.Http.post(URL.EXISTEMAIL, {
-                    params: this.msgx.email
+                await this.Http.post(URL.ISEXIST, {
+                    params: this.msgx.phone
                 }).then((re) => {
                     if (re.data) {
-                        this.malis_state = false;
-                        callback(new Error('该邮箱已占用'));
+                        this.phone_state = false;
+                        callback(new Error('该手机号已占用'));
                     } else {
-                        this.malis_state = true;
+                        this.phone_state = true;
                         callback();
                     }
                 });
@@ -96,10 +96,10 @@ export default {
             myshow: false,
             msgx: {
                 password: '',
-                email: '',
+                phone: '',
                 verifyCode: ''
             },
-            malis_state: false, // emial状态
+            phone_state: false, // 手机状态
             pass_state: false, // 密码状态
             send_state: true,  // 发送状态
             timeouts: 60, // 倒计时时间
@@ -109,7 +109,7 @@ export default {
                 password: [
                     { required: true, validator: validatenewpasswd, trigger: 'blur' }
                 ],
-                email: [
+                phone: [
                     { required: true, validator: validateemail, trigger: 'blur' }
                 ],
                 verifyCode: [
@@ -128,7 +128,7 @@ export default {
         ]),
         // 可发送按钮是否禁用
         statex () {
-            return !(this.malis_state && this.pass_state);
+            return !(this.phone_state && this.pass_state);
         }
     },
     mounted () {
@@ -143,11 +143,11 @@ export default {
                 if (!valid) {
                     return false;
                 } else {
-                    this.Http.post(URL.CHANGE_EMAIL, {
+                    this.Http.post(URL.CHANGE_PHONE, {
                         userNo: this.userno,
                         password: encryption(this.msgx.password, this.clientid, this.token),
                         verifyCode: this.msgx.verifyCode,
-                        email: this.msgx.email
+                        mobilePhone: this.msgx.phone
                     }).then((re) => {
                         if (re.data) {
                             this.$notify({
@@ -167,7 +167,7 @@ export default {
         reset () {
             setTimeout(() => {
                 clearInterval(this.sendTime);
-                this.malis_state = false;
+                this.phone_state = false;
                 this.pass_state = false;
                 this.send_state = true;
                 this.showResend = false;
@@ -175,6 +175,7 @@ export default {
                 this.$refs.forms.resetFields();
             }, 500);
         },
+        // 发送短信
         sendCode () {
             this.send_state = false;
             this.$refs.forms.validateField('password', (valid) => {
@@ -182,7 +183,7 @@ export default {
                     this.send_state = true;
                     return;
                 }
-                this.$refs.forms.validateField('email', (valid) => {
+                this.$refs.forms.validateField('phone', (valid) => {
                     this.send_state = true;
                     if (valid) {
                         return;

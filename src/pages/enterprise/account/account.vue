@@ -55,7 +55,7 @@
                                     <span class="Success" v-if="user.phone">已设置</span>
                                     <span class="orange" v-else>未绑定</span>
                                     <span> | </span>
-                                    <span class="text-button" @click="changeEmails">{{user.phone?'修改手机':'绑定手机'}}</span>
+                                    <span class="text-button" @click="changePhones">{{user.phone?'修改手机':'绑定手机'}}</span>
                                 </div>
                             </el-col>
                         </el-row>
@@ -73,7 +73,7 @@
                                     <span class="Success" v-if="user.email">已设置</span>
                                     <span class="orange" v-else>未绑定</span>
                                     <span> | </span>
-                                    <span class="text-button" >{{user.email?'修改邮箱':'绑定邮箱'}}</span>
+                                    <span class="text-button" @click="changeEmails">{{user.email?'修改邮箱':'绑定邮箱'}}</span>
                                 </div>
                             </el-col>
                         </el-row>
@@ -97,10 +97,13 @@
                 <change-name :showx.sync="changeNameShow" @refresh="getUserInfo" :msgx="changeNameMsg"></change-name>
             </el-col>
             <el-col :span="24">
-                <change-passwd :showx.sync="changePasswdShow" @refresh="getUserInfo" ></change-passwd>
+                <change-passwd :showx.sync="changePasswdShow"  @refresh="getUserInfo" ></change-passwd>
             </el-col>
             <el-col :span="24">
-                <change-email :showx.sync="changeEmailShow"   @refresh="getUserInfo"></change-email>
+                <change-email :showx.sync="changeEmailShow"   :title="changeEmailMsg" @refresh="getUserInfo"></change-email>
+            </el-col>
+            <el-col :span="24">
+                <change-phone :showx.sync="changePhoneShow"   :title="changePhoneMsg" @refresh="getUserInfo"></change-phone>
             </el-col>
         </el-row>
     </section>
@@ -109,6 +112,7 @@
 import changeName from './mods/changeName';
 import changePasswd from './mods/changePasswd';
 import changeEmail from './mods/changeEmail';
+import changePhone from './mods/changePhone';
 import { mapGetters } from 'vuex';
 const URL = {
     findUserByNoForWeb: 'ypt.open.user.findUserByNoForWeb' // 登陆用户的信息
@@ -121,7 +125,10 @@ export default {
             changeNameShow: false, // 更改姓名
             changeNameMsg: {}, // 更改姓名
             changePasswdShow: false, // 更改密码
-            changeEmailShow: false // 更改邮箱
+            changeEmailShow: false, // 更改邮箱
+            changeEmailMsg: '', // 更改邮箱
+            changePhoneShow: false, // 更改手机
+            changePhoneMsg: '' // 更改手机
         };
     },
     computed: {
@@ -150,6 +157,11 @@ export default {
         },
         changeEmails () {
             this.changeEmailShow = true;
+            this.changeEmailMsg = this.user.email ? '修改邮箱' : '绑定邮箱';
+        },
+        changePhones () {
+            this.changePhoneShow = true;
+            this.changePhoneMsg = this.user.phone ? '修改手机' : '绑定手机';
         }
     },
     mounted () {
@@ -158,7 +170,8 @@ export default {
     components: {
         changeName,
         changePasswd,
-        changeEmail
+        changeEmail,
+        changePhone
     }
 };
 
