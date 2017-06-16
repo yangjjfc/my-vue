@@ -115,13 +115,13 @@
             <el-col :span="24" class="toolbar">
                 <pagination :total="total" :pageSize="pageSize"  @change="getList"></pagination>
             </el-col>
-            <el-col :span="24">
+            <el-col :span="24" v-if="showEdit">
                 <editUser :showx.sync="showEdit" :msg="editUserMsg" @refresh="getList"></editUser>
             </el-col>  
-            <el-col :span="24">
-                <addUser :showx.sync="showaddUser"  @refresh="getList"></addUser>
+            <el-col :span="24" v-if="showaddUser">
+                    <addUser  :showx.sync="showaddUser"  @refresh="getList"></addUser>
             </el-col> 
-            <el-col :span="24">
+            <el-col :span="24"  v-if="showrelieveUser">
                 <relieve :showx.sync="showrelieveUser" :msg="relieveUserMsg" @refresh="getList"></relieve>
             </el-col> 
         </el-row>

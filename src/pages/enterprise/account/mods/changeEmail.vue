@@ -62,7 +62,7 @@ export default {
                         callback();
                     }
                 });
-            } else if (!this.pass_state) {
+            } else if (!this.pass_state) { // 提交时验证处理
                 callback(new Error('密码错误'));
             } else {
                 this.pass_state = true;
@@ -89,7 +89,7 @@ export default {
                         callback();
                     }
                 });
-            } else if (!this.malis_state) {
+            } else if (!this.malis_state) { // 提交时验证处理
                 callback(new Error('该邮箱已占用'));
             } else {
                 this.malis_state = true;

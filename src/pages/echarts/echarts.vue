@@ -85,16 +85,16 @@ export default {
 
     data () {
         return {
-
-            data: []
-
+            data: [],
+            charts_product: '',
+            charts_hospital: '',
+            charts_cert: '',
+            chartLine_sell: '',
+            chartLine_order: ''
         };
     },
-
     methods: {
-
         // 获取折线图数据
-
         charts_line () {
             this.Http.post(URL.ORDERBYSUPPLIER, {
 
@@ -128,7 +128,6 @@ export default {
         openCahrt () {
             setTimeout(() => {
                 this.chartLine_order = echarts.init(this.$refs.charts_order);
-
                 this.setChart_line(this.chartLine_order, this.data.month, this.data.num, 2);
             }, 500);
         },
@@ -309,17 +308,20 @@ export default {
         this.charts_pie();
 
         window.onresize = () => (() => {
-            // 重置echarts
+            setTimeout(() => {
+                // 重置echarts
+                this.charts_product.resize();
 
-            this.charts_product.resize();
+                this.charts_hospital.resize();
 
-            this.charts_hospital.resize();
+                this.charts_cert.resize();
 
-            this.charts_cert.resize();
+                this.chartLine_sell.resize();
 
-            this.chartLine_sell.resize();
-
-            this.chartLine_order.resize();
+                if (this.chartLine_order) {
+                    this.chartLine_order.resize();
+                }
+            }, 100);
         })();
     }
 

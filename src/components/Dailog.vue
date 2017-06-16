@@ -2,7 +2,7 @@
 <template>
     <section>
         <el-dialog :title="title" :visible.sync="shows" :size="size" :custom-class="classx" custom-class="dailog-box" :close-on-click-modal="close" :close-on-press-escape="close" :before-close="cancel">
-            <slot name='content'></slot>
+            <slot name='content' ></slot>
             <span slot="footer" class="dialog-footer" >
                 <el-button @click.sync="cancel">关闭</el-button>
                 <el-button type="primary" @click="ok" v-if="!hide">确 定</el-button>
@@ -12,6 +12,7 @@
 </template>
 
 <script>
+
 export default {
     name: 'Dailog',
     data () {
@@ -51,6 +52,9 @@ export default {
             this.shows = this.show; // 监听show的变化
         }
     },
+    created () {
+        this.shows = this.show;
+    },
     methods: {
         // 确认事件
         ok () {
@@ -71,5 +75,27 @@ export default {
 <style  lang="scss" rel="stylesheet/scss">
   .dailog-box{
       min-width: 560px;
-  }
+   
+  } 
+ @media screen and (max-height: 700px){
+     .el-dialog__body{
+        max-height: 435px;
+        overflow:auto;
+    }
+}
+@media (min-height: 700px) and (max-height: 900px) {
+     .el-dialog__body{
+        max-height: 435px;
+        overflow:auto;
+    }
+}
+@media (min-height: 900px) {
+     .el-dialog__body{
+        max-height: 660px;
+        overflow:auto;
+    }
+}  
+    
+      
+
 </style>

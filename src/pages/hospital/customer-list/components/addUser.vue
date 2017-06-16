@@ -2,7 +2,7 @@
 <template>
     <section>
         <dailog size="small" :show.sync="myshow" classx="eidt-user" title="添加客户" hide="true">
-            <el-row slot="content">
+            <el-row slot="content" ref="content" id="content">
                 <el-col :span="24">
                     <el-form :inline="true">
                         <el-form-item>
@@ -61,7 +61,7 @@ export default {
     props: ['showx'],
     data () {
         return {
-            myshow: this.showx, // 是否显示弹框
+            myshow: false, // 是否显示弹框
             msgx: null, // 数据
             keywords: '',
             pageIndex: 1,
@@ -70,7 +70,7 @@ export default {
         };
     },
     computed: {
-        ...mapState(['userInfo'])
+        ...mapState(['userInfo', 'windowHeight'])
     },
     methods: {
         // 确认
@@ -119,18 +119,16 @@ export default {
         }
     },
     watch: {
-        showx (val, oldval) {
-            if (val) {
-                this.view().then(() => {
-                    this.myshow = this.showx;
-                });
-            }
-        },
         myshow (val, oldval) {
             if (oldval && !val) {
                 this.$emit('update:showx', false);
             }
         }
+    },
+    beforeMount () {
+        this.view().then(() => {
+            this.myshow = this.showx;
+        });
     },
     components: {
         dailog,
@@ -144,5 +142,8 @@ export default {
 <style scoped lang="scss" rel="stylesheet/scss">
 .el-form-item {
     margin-bottom: 22px;
+    
 }
+
+
 </style>

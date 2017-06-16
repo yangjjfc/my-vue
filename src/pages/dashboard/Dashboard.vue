@@ -137,7 +137,7 @@ export default {
 
     methods: {
 
-        ...mapMutations(['REFRESH']),
+        ...mapMutations(['REFRESH', 'HEIGHTRESIZE']),
 
         ...mapActions({
 
@@ -183,12 +183,9 @@ export default {
 
         collapse () {
             this.collapsed = !this.collapsed;
-
             if (document.createEvent) {
                 var event = document.createEvent('HTMLEvents');
-
                 event.initEvent('resize', true, true);
-
                 window.dispatchEvent(event);
             } else if (document.createEventObject) {
                 window.fireEvent('onresize');
@@ -206,6 +203,10 @@ export default {
         this.sysUserName = User.msg.enterpriseName;
 		// this.sysUserAvatar = CONFIG.IMAGE_DOWNLOAD + User.msg.enterpriseLogo;
         this.sysUserAvatar = 'http://dfs.test.cloudyigou.com/dfs/s2/M00/25/39/rB4r9Vk3mwWAdctcAAFf5pjzdHU212_100x100.jpg';
+        window.onresize = () => (() => {
+            let $height = document.body.clientHeight || document.documentElement.clientHeight;
+            this.HEIGHTRESIZE($height);
+        })();
     },
 
     created () {
@@ -215,7 +216,6 @@ export default {
 	// F5刷新重新赋值
 
     computed: mapState({
-
         useInfo: function (state) {
             if (!state.userInfo) {
                 this.REFRESH();
@@ -223,7 +223,6 @@ export default {
 
             return state.userInfo;
         }
-
     })
 
 };

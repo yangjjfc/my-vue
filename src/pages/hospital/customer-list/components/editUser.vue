@@ -1,7 +1,7 @@
 //编辑用户电话和联系人
 <template>
     <section>
-        <dailog size="tiny" :show.sync="myshow" classx="eidt-user" title="编辑联系人" @ok="ok" @reset="reset" >
+        <dailog size="tiny" :show.sync="myshow" classx="eidt-user" title="编辑联系人" @ok="ok"  >
             <el-form slot="content" ref="edits" label-width="100px" class="demo-dynamic" :model="msgx">
                 <el-form-item label="医院名称" >
                     <p v-text="msgx.customerName"></p>
@@ -30,7 +30,7 @@ export default {
     props: ['showx', 'msg'],
     data () {
         return {
-            myshow: this.showx, // 是否显示弹框
+            myshow: false, // 是否显示弹框
             msgx: {
                 customerName: '',
                 linkman: '',
@@ -60,32 +60,23 @@ export default {
                                 type: 'success'
                             });
                             this.$emit('refresh');
+                            this.myshow = false;
                         }
                     });
-                    this.myshow = false;
-                    this.reset();
                 }
             });
-        },
-        // 重置bug,模拟异步解决
-        reset () {
-            setTimeout(() => {
-                this.$refs.edits.resetFields();
-            }, 500);
         }
     },
     watch: {
-        showx (val, oldval) {
-            this.myshow = this.showx;
-        },
         myshow (val, oldval) {
             if (oldval && !val) {
                 this.$emit('update:showx', false);
             }
-        },
-        msg () {
-            this.msgx = this.msg;
         }
+    },
+    beforeMount () {
+        this.msgx = this.msg;
+        this.myshow = this.showx;
     },
     components: {
         dailog
