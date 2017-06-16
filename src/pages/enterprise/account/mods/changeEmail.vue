@@ -1,6 +1,6 @@
 <template>
     <section>
-        <dailog size="tiny" :show.sync="myshow" classx="change-name" :title="title"  @ok="quire" @reset="reset">
+        <dailog size="tiny" :show.sync="myshow" classx="change-name" :title="title"  @ok="quire">
             <el-form slot="content"  :rules="rules" label-width="100px" ref="forms" class="demo-dynamic" :model="msgx" :error="132">
                 <el-form-item label="登录密码" prop="password">
                     <el-input placeholder="登录密码" type="password" v-model.trim="msgx.password"></el-input>
@@ -161,24 +161,23 @@ export default {
                             });
                             this.myshow = false;
                             this.$emit('refresh');
-                            this.reset();
                         }
                     });
                 }
             });
         },
-        // 重置bug,模拟异步解决
-        reset () {
-            setTimeout(() => {
-                clearInterval(this.sendTime);
-                this.malis_state = false;
-                this.pass_state = false;
-                this.send_state = true;
-                this.showResend = false;
-                this.timeouts = 60;
-                this.$refs.forms.resetFields();
-            }, 500);
-        },
+        // // 重置bug,模拟异步解决
+        // reset () {
+        //     setTimeout(() => {
+        //         clearInterval(this.sendTime);
+        //         this.malis_state = false;
+        //         this.pass_state = false;
+        //         this.send_state = true;
+        //         this.showResend = false;
+        //         this.timeouts = 60;
+        //         this.$refs.forms.resetFields();
+        //     }, 500);
+        // },
         sendCode () {
             this.send_state = false;
             this.$refs.forms.validateField('password', (valid) => {
@@ -214,14 +213,14 @@ export default {
         }
     },
     watch: {
-        showx (val, oldval) {
-            this.myshow = this.showx;
-        },
         myshow (val, oldval) {
             if (oldval && !val) {
                 this.$emit('update:showx', false);
             }
         }
+    },
+    beforeMount () {
+        this.myshow = this.showx;
     },
     components: {
         dailog

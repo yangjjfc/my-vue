@@ -1,7 +1,7 @@
 //添加客户
 <template>
     <section>
-        <dailog size="tiny" :show.sync="myshow" classx="change-name" title="修改姓名" @ok="quire" @reset="reset">
+        <dailog size="tiny" :show.sync="myshow" classx="change-name" title="修改姓名" @ok="quire" >
             <el-form slot="content" label-width="100px" ref="forms" class="demo-dynamic" :model="msgx">
                 <el-form-item label="原真实姓名" prop="rename">
                     <el-input placeholder="原真实姓名" :disabled="true" v-model.trim="msgx.rename"></el-input>
@@ -72,29 +72,22 @@ export default {
                                 type: 'success'
                             });
                             this.$emit('refresh');
+                            this.myshow = false;
                         }
                     });
-                    this.myshow = false;
-                    this.reset();
                 }
             });
-        },
-        // 重置bug,模拟异步解决
-        reset () {
-            setTimeout(() => {
-                this.$refs.forms.resetFields();
-            }, 500);
         }
     },
     watch: {
-        showx (val, oldval) {
-            this.myshow = this.showx;
-        },
         myshow (val, oldval) {
             if (oldval && !val) {
                 this.$emit('update:showx', false);
             }
         }
+    },
+    beforeMount () {
+        this.myshow = this.showx;
     },
     components: {
         dailog

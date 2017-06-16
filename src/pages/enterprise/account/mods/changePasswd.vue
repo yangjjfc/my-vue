@@ -1,7 +1,7 @@
 //添加客户
 <template>
     <section>
-        <dailog size="tiny" :show.sync="myshow" classx="change-name" title="修改密码" @ok="quire" @reset="reset">
+        <dailog size="tiny" :show.sync="myshow" classx="change-name" title="修改密码" @ok="quire">
             <el-form slot="content"  :rules="rules" label-width="100px" ref="forms" class="demo-dynamic" :model="msgx">
                 <el-form-item label="旧密码" prop="repasswd">
                     <el-input placeholder="旧密码" type="password" v-model.trim="msgx.repasswd"></el-input>
@@ -117,30 +117,24 @@ export default {
                                 message: '修改成功',
                                 type: 'success'
                             });
-                            this.myshow = false;
                             this.$emit('refresh');
-                            this.reset();
+                            this.myshow = false;
                         }
                     });
                 }
             });
-        },
-        // 重置bug,模拟异步解决
-        reset () {
-            setTimeout(() => {
-                this.$refs.forms.resetFields();
-            }, 500);
         }
+
     },
     watch: {
-        showx (val, oldval) {
-            this.myshow = this.showx;
-        },
         myshow (val, oldval) {
             if (oldval && !val) {
                 this.$emit('update:showx', false);
             }
         }
+    },
+    beforeMount () {
+        this.myshow = this.showx;
     },
     components: {
         dailog

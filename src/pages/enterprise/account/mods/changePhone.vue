@@ -177,10 +177,10 @@ export default {
                     if (valid) {
                         return;
                     } else {
-                        this.Http.post(URL.SEND_EMAIL_CODE, {
-                            appCode: 'yscm',
-                            type: '9',
-                            email: this.msgx.email
+                        this.Http.post(URL.SEND_PHONE_CODE, {
+                            params: {
+                                mobilePhone: this.msgx.phone
+                            }
                         }).then((re) => {
                             if (re.data) {
                                 this.showResend = true;
