@@ -1,7 +1,7 @@
 //基本的dailog弹框组件
 <template>
     <section>
-        <el-dialog :title="title" :visible.sync="shows" :size="size" :custom-class="classx" custom-class="dailog-box" :close-on-click-modal="close" :close-on-press-escape="close" :before-close="cancel">
+        <el-dialog :title="title" :visible.sync="shows" :size="size" :custom-class="classx"  :close-on-click-modal="close" :close-on-press-escape="close" :before-close="cancel">
             <slot name='content' ></slot>
             <span slot="footer" class="dialog-footer" >
                 <el-button @click.sync="cancel">关闭</el-button>
@@ -54,6 +54,7 @@ export default {
     },
     created () {
         this.shows = this.show;
+        console.log(this.classx);
     },
     methods: {
         // 确认事件
@@ -73,9 +74,9 @@ export default {
 </script>
 
 <style  lang="scss" rel="stylesheet/scss">
-  .dailog-box{
+ @import '../assets/style/element-change';
+  .el-dialog{
       min-width: 560px;
-   
   } 
  @media screen and (max-height: 700px){
      .el-dialog__body{

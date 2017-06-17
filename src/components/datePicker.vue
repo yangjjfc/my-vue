@@ -60,6 +60,7 @@ export default {
         },
         classx: String // 自定义class
     },
+
     watch: {
         // 开始禁用区域
         disabledDate_sta (val) {

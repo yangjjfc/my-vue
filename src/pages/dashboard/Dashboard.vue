@@ -203,10 +203,10 @@ export default {
         this.sysUserName = User.msg.enterpriseName;
 		// this.sysUserAvatar = CONFIG.IMAGE_DOWNLOAD + User.msg.enterpriseLogo;
         this.sysUserAvatar = 'http://dfs.test.cloudyigou.com/dfs/s2/M00/25/39/rB4r9Vk3mwWAdctcAAFf5pjzdHU212_100x100.jpg';
-        window.onresize = () => (() => {
-            let $height = document.body.clientHeight || document.documentElement.clientHeight;
-            this.HEIGHTRESIZE($height);
-        })();
+        // window.onresize = () => (() => {
+        //     let $height = document.body.clientHeight || document.documentElement.clientHeight;
+        //     this.HEIGHTRESIZE($height);
+        // })();
     },
 
     created () {

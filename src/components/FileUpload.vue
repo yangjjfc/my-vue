@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div ref="img-upload">
     <el-upload :action="action" :list-type="type" :headers="headers"
      :on-success="success" 
      :show-file-list="show"
@@ -30,6 +30,7 @@ export default {
             action: CONFIG.IMAGE_UPLOAD, // 上传地址
             multiple: true, // 支持多张上传
             fileLists: [],  // 文件地址[{name,url}]
+            imgUrls: [],
             headers: null, // 添加头
             drag: false // 是否支持拖拽上传
         };
@@ -46,7 +47,10 @@ export default {
                 return 5;
             }
         },
-        classx: String, // 自定义class
+        classx: {
+            type: String,
+            required: true
+        }, // 自定义class
         type: { // 显示类型
             type: String,
             default () {
@@ -72,11 +76,14 @@ export default {
         // 填充图片
         let src = (typeof this.files === 'string' ? [this.files] : (this.files instanceof Array ? this.files : null));
         src.forEach(item => {
-            this.fileLists.push(this.formatFile(item));
+            let formatUrl = this.formatFile(item);
+            this.fileLists.push(formatUrl);
+            this.imgUrls.push(formatUrl.reUrl);
         });
     },
     watch: {
         fileLists (val, oldval) {
+            this.$emit('getUrl', this.imgUrls);
             if (this.fileLists.length === this.max) {
                 $('.' + this.classx).find('.el-upload--picture-card').hide();
             } else {
@@ -131,7 +138,8 @@ export default {
             return {
                 uid: (uid || parseInt(Math.random() * 1000000000)),
                 url: thumbnail,
-                fullUrl: CONFIG.IMAGE_DOWNLOAD + item
+                fullUrl: CONFIG.IMAGE_DOWNLOAD + item,
+                reUrl: item
             };
         },
         // 点击放大镜查看
@@ -148,7 +156,9 @@ export default {
         // 上传成功
         success (response, file, fileList) {
             let res = JSON.parse(response);
-            this.fileLists.push(this.formatFile(res.data, file.uid));
+            let formatUrl = this.formatFile(res.data, file.uid);
+            this.fileLists.push(formatUrl);
+            this.imgUrls.push(formatUrl.reUrl);
         },
         // 删除
         remove (file, fileList) {
@@ -157,12 +167,15 @@ export default {
             }
             let files = this.fileLists;
             this.fileLists = [];
+            this.imgUrls = [];
             for (let val of files) {
                 if (file.uid !== val.uid) {
                     this.fileLists.push(val);
+                    this.imgUrls.push(val.reUrl);
                 }
             }
         }
+
     }
 };
 </script>

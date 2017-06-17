@@ -3,6 +3,7 @@ const customerList = r => require.ensure([], () => r(require('../pages/hospital/
 const newCustomer = r => require.ensure([], () => r(require('../pages/hospital/new-customer/new-customer')), 'newCustomer'); // 医院管理-客户列表
 const charts = r => require.ensure([], () => r(require('../pages/echarts/echarts')), 'charts');
 const account = r => require.ensure([], () => r(require('../pages/enterprise/account/account')), 'account');
+const staff = r => require.ensure([], () => r(require('../pages/enterprise/staff/staff')), 'staff');
 import Auth from '../pages/auth/Auth';
 export default [
     {
@@ -20,7 +21,8 @@ export default [
             { path: '/customerList', component: customerList, name: 'customerList' },
             { path: '/charts', component: charts, name: 'charts' },
             { path: '/newCustomer', component: newCustomer, name: 'newCustomer' },
-            { path: '/account', component: account, name: 'account' }
+            { path: '/account', component: account, name: 'account' },
+            { path: '/staff', component: staff, name: 'staff' }
         ]
     }
 ];
