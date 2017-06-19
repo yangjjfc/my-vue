@@ -67,7 +67,7 @@ export default {
             let checked = [];
             let listChecked = (data) => {
                 for (let item of data) {
-                    if (item.checked) {
+                    if (item.checked && item.isLeaf) {
                         checked.push(item.id);
                     }
                     if (!item.isLeaf) {
