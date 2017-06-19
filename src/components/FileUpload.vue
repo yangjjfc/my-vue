@@ -67,19 +67,22 @@ export default {
     computed: {
         ...mapGetters([
             'token'
-        ])
+        ]),
+        chageFiles () {
+            let src = (typeof this.files === 'string' ? [this.files] : (this.files instanceof Array ? this.files : null));
+            src.forEach(item => {
+                let formatUrl = this.formatFile(item);
+                this.fileLists.push(formatUrl);
+                this.imgUrls.push(formatUrl.reUrl);
+            });
+        }
     },
     mounted () {
         this.headers = {
             jtoken: this.token
         };
         // 填充图片
-        let src = (typeof this.files === 'string' ? [this.files] : (this.files instanceof Array ? this.files : null));
-        src.forEach(item => {
-            let formatUrl = this.formatFile(item);
-            this.fileLists.push(formatUrl);
-            this.imgUrls.push(formatUrl.reUrl);
-        });
+        this.chageFiles;
     },
     watch: {
         fileLists (val, oldval) {
@@ -89,9 +92,15 @@ export default {
             } else {
                 $('.' + this.classx).find('.el-upload--picture-card').show();
             }
+        },
+        // 图片数据变化
+        files () {
+            this.chageFiles;
         }
     },
+
     methods: {
+
         // 上传前
         beforeUpload (file) {
             // 文件类型

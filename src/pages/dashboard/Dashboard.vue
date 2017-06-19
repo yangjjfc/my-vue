@@ -113,8 +113,6 @@ import {
 
 } from 'vuex';
 
-import User from '@/services/User';
-
 // import CONFIG from '@/config/app.config';
 
 export default {
@@ -147,8 +145,7 @@ export default {
 
         logout: function () { /** 退出登 */
             var self = this;
-
-            SweetAlert.swal({
+            SweetAlert.confirm({
 
                 title: '确认退出吗',
 
@@ -199,8 +196,7 @@ export default {
     },
 
     mounted () {
-        User.msg = User.msg || {};
-        this.sysUserName = User.msg.enterpriseName;
+        this.sysUserName = this.useInfo.enterpriseName;
 		// this.sysUserAvatar = CONFIG.IMAGE_DOWNLOAD + User.msg.enterpriseLogo;
         this.sysUserAvatar = 'http://dfs.test.cloudyigou.com/dfs/s2/M00/25/39/rB4r9Vk3mwWAdctcAAFf5pjzdHU212_100x100.jpg';
         // window.onresize = () => (() => {

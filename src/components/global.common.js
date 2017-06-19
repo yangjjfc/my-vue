@@ -82,96 +82,90 @@ export const encryption = (password, clientid, token) => {
 };
 
 /** 失去焦点校验数据 */
-export class validate {
-    constructor () {
-        this.malis_state = true;
-        this.phone_state = true;
-        this.loginAccount_state = true;
-    }
+export const Validate = {
+    URL: {
+        EXISTEMAIL: 'ypt.open.user.isExistEmailForWeb', // 判断邮箱是否存在
+        ISEXIST: 'ypt.open.user.isExistMobileForWeb', // 判断手机号是否存在
+        isExistUserByLoginAccountForWeb: 'ypt.open.user.isExistUserByLoginAccountForWeb'
+    },
     // 用户名
-    loginAccount (flag) {
-        let validateloginAccount = async (rule, value, callback) => {
-            if (flag && value.length > 0) {
-                await this.Http.post(URL.isExistUserByLoginAccountForWeb, {
-                    loginAccount: this.msgx.loginAccount
-                }).then((re) => {
-                    if (re.data) {
-                        this.loginAccount_state = false;
-                        callback(new Error('用户名已存在'));
-                    } else {
-                        this.loginAccount_state = true;
-                        callback();
-                    }
-                });
-            } else if (!this.loginAccount_state) {
-                callback(new Error('用户名已存在'));
-            } else {
-                this.loginAccount_state = true;
-                callback();
-            }
-        };
-    }
+    validateloginAccount: async function (rule, value, callback) {
+        if (this.send_status) {
+            await this.Http.post(Validate.URL.isExistUserByLoginAccountForWeb, {
+                loginAccount: this.msgx.loginAccount
+            }).then((re) => {
+                if (re.data) {
+                    this.loginAccount_state = false;
+                    callback(new Error('用户名已存在'));
+                } else {
+                    this.loginAccount_state = true;
+                    callback();
+                }
+            });
+        } else if (!this.loginAccount_state) {
+            callback(new Error('用户名已存在'));
+        } else {
+            this.loginAccount_state = true;
+            callback();
+        }
+    },
     // 密码
-    password () {
-        let validatePassword = (rule, value, callback) => {
-            if (value.length <= 20 && value.length >= 6) {
-                this.$refs.forms.validateField('repassword');
-                callback();
-            }
-        };
-        let validateRePassword = (rule, value, callback) => {
-            if (value.length && value !== this.msgx.password) {
-                callback(new Error('两次输入密码不一致!'));
-            } else {
-                callback();
-            }
-        };
-    }
+    validatePassword (rule, value, callback) {
+        if (value.length <= 20 && value.length >= 6) {
+            this.$refs.forms.validateField('repassword');
+            callback();
+        }
+    },
+    // 重复密码
+    validateRePassword (rule, value, callback) {
+        if (value.length && value !== this.msgx.password) {
+            callback(new Error('两次输入密码不一致!'));
+        } else {
+            callback();
+        }
+    },
     // 手机
-    phone (flag) {
-        let validatePhone = async (rule, value, callback) => {
-            if (flag && value.length > 0) {
-                await this.Http.post(URL.ISEXIST, {
-                    params: this.msgx.mobilePhone
-                }).then((re) => {
-                    if (re.data) {
-                        this.phone_state = false;
-                        callback(new Error('该手机号已占用'));
-                    } else {
-                        this.phone_state = true;
-                        callback();
-                    }
-                });
-            } else if (!this.phone_state) {
-                callback(new Error('该手机号已占用'));
-            } else {
-                this.phone_state = true;
-                callback();
-            }
-        };
-    }
+    validatePhone: async function (rule, value, callback) {
+        if (this.send_status && value.length > 0) {
+            await this.Http.post(Validate.URL.ISEXIST, {
+                params: this.msgx.mobilePhone
+            }).then((re) => {
+                if (re.data) {
+                    this.phone_state = false;
+                    callback(new Error('该手机号已占用'));
+                } else {
+                    this.phone_state = true;
+                    callback();
+                }
+            });
+        } else if (!this.phone_state) {
+            callback(new Error('该手机号已占用'));
+        } else {
+            this.phone_state = true;
+            callback();
+        }
+    },
     // 邮箱
-    email (flag) {
-        let validateEmail = async (rule, value, callback) => {
-            if (flag && value.length > 0) {
-                await this.Http.post(URL.EXISTEMAIL, {
-                    params: this.msgx.email
-                }).then((re) => {
-                    if (re.data) {
-                        this.malis_state = false;
-                        callback(new Error('该邮箱已占用'));
-                    } else {
-                        this.malis_state = true;
-                        callback();
-                    }
-                });
-            } else if (!this.malis_state) { // 提交时验证处理
-                callback(new Error('该邮箱已占用'));
-            } else {
-                this.malis_state = true;
-                callback();
-            }
-        };
+    validateEmail: async function (rule, value, callback) {
+        if (this.send_status && value.length > 0) {
+            await this.Http.post(Validate.URL.EXISTEMAIL, {
+                params: this.msgx.email
+            }).then((re) => {
+                if (re.data) {
+                    this.malis_state = false;
+                    callback(new Error('该邮箱已占用'));
+                } else {
+                    this.malis_state = true;
+                    callback();
+                }
+            });
+        } else if (!this.malis_state) { // 提交时验证处理
+            callback(new Error('该邮箱已占用'));
+        } else {
+            this.malis_state = true;
+            callback();
+        }
     }
 
-}
+};
+

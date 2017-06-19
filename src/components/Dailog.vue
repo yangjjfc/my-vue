@@ -54,7 +54,6 @@ export default {
     },
     created () {
         this.shows = this.show;
-        console.log(this.classx);
     },
     methods: {
         // 确认事件

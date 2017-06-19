@@ -43,11 +43,11 @@
                     </el-table-column>
                     <el-table-column label="操作"  width="570">
                         <template scope="scope">
-                            <el-button size="mini" type="primary" @click="open" v-if="scope.row.status !='3'">编辑</el-button>
-                            <el-button size="mini" type="success" @click="open" v-if="scope.row.status=='2'">启用</el-button>
-                            <el-button size="mini" type="warning" @click="open" v-if="scope.row.status=='1'">禁用</el-button>
-                            <el-button size="mini" type="danger" @click="open" v-if="scope.row.status !='3'">删除</el-button>
-                            <el-button size="mini" type="primary" @click="open" v-if="scope.row.status !='3'">权限</el-button>
+                            <el-button size="mini" type="primary" @click="editUser(scope.row)" v-if="scope.row.status !='3'" >编辑</el-button>
+                            <el-button size="mini" type="success" @click="enabled(scope.row,'1')" v-if="scope.row.status=='2'">启用</el-button>
+                            <el-button size="mini" type="warning" @click="enabled(scope.row,'2')" v-if="scope.row.status=='1'">禁用</el-button>
+                            <el-button size="mini" type="danger"  @click="enabled(scope.row,'3')" v-if="scope.row.status !='3'">删除</el-button>
+                            <el-button size="mini" type="primary" @click="permission(scope.row)" v-if="scope.row.status !='3'">权限</el-button>
                             <el-button size="mini" type="primary" @click="open" v-if="scope.row.status !='3'&&scope.row.orderSpecialist !='1'">取消订单专员</el-button>
                             <el-button size="mini" type="primary" @click="open" v-if="scope.row.status !='3'&&scope.row.orderSpecialist !='0'">设置订单专员</el-button>
                             <el-button size="mini" type="primary" @click="relieve(scope.row)" v-if="scope.row.status !='3'">授权客户</el-button>
@@ -59,11 +59,11 @@
             <el-col :span="24" class="toolbar">
                 <pagination :total="total" :pageSize="pageSize"  @change="getList"></pagination>
             </el-col>
-            <!--<el-col :span="24" v-if="showEdit">
-                <editUser :showx.sync="showEdit" :msg="editUserMsg" @refresh="getList"></editUser>
-            </el-col>  -->
+            <el-col :span="24" v-if="showPermission">
+                <permission :showx.sync="showPermission" :useMsg="userMsg" @refresh="getList"></permission>
+            </el-col>  
             <el-col :span="24" v-if="showaddUser">
-                    <addUser  :showx.sync="showaddUser"  @refresh="getList"></addUser>
+                    <addUser  :showx.sync="showaddUser" :title="addTitle" :type="addType" :eidtUser="userMsg" @refresh="getList"></addUser>
             </el-col> 
             <!--<el-col :span="24"  v-if="showrelieveUser">
                 <relieve :showx.sync="showrelieveUser" :msg="relieveUserMsg" @refresh="getList"></relieve>
@@ -73,19 +73,22 @@
 </template>
 <script>
 import pagination from '@/components/pagination';
-// import editUser from './components/editUser'; // 编辑
 import addUser from './mods/addUser';  // 添加客户
+import permission from './mods/permission';  // 添加用户权限
 // import relieve from './components/relieve'; // 解除客户
 const URL = {
-    PEOPLE_LIST: 'scm.enterprise.queryStaffList'// 查询员工列表
+    PEOPLE_LIST: 'scm.enterprise.queryStaffList', // 查询员工列表
+    STAFF: 'scm.enterprise.modValidateStaff' // 启用/停用/删除员工
 };
 export default {
     name: 'staff',
     data () {
         return {
-            showEdit: false, // 显示编辑用户
-            editUserMsg: null, // 编辑用户数据
+            showPermission: false, // 显示权限配置
+            userMsg: null, // 数据
+            addTitle: null,
             showaddUser: false, // 显示添加用户
+            addType: false, // 添加用户类型
             showrelieveUser: false, // 显示解除用户
             relieveUserMsg: null, // 显示解除用户数据
             total: 0,
@@ -137,16 +140,51 @@ export default {
                     }
                 });
         },
+        // 启用,禁用,删除
+        enabled (msg, type) {
+            this.$confirm('您确定要' + (type === '1' ? '启用' : type === '2' ? '禁用' : type === '3' ? '删除' : '') + '用户【' + msg.userName + '】吗?', '员工状态更新', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(() => {
+                this.Http.post(URL.STAFF, {
+                    params: {
+                        status: type,
+                        userNo: msg.userNo
+                    }
+                }).then((re) => {
+                    if (re.data) {
+                        this.getList();
+                        if (type === '3') {
+                            this.$notify({
+                                title: '成功',
+                                message: '删除成功',
+                                type: 'success'
+                            });
+                        }
+                    }
+                });
+            }).catch(function () {});
+        },
+        // 配置权限
+        permission (msg) {
+            this.userMsg = {...msg};
+            this.showPermission = true;
+        },
         open () {
 
         },
         // 编辑用户
         editUser (msg) {
-            this.showEdit = true;
-            this.editUserMsg = {...msg};
+            this.addTitle = '编辑员工资料';
+            this.addType = 'edit';
+            this.userMsg = {...msg};
+            this.showaddUser = true;
         },
         // 添加用户
         addUser () {
+            this.addTitle = '添加用户';
+            this.addType = 'add';
             this.showaddUser = true;
         },
         // 解除用户
@@ -167,7 +205,7 @@ export default {
     },
     components: {
         pagination,
-        // editUser,
+        permission,
         addUser
         // relieve
     }
