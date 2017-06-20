@@ -28,7 +28,7 @@
                     </el-table-column>
                      <el-table-column prop="mobilePhone" label="手机号码" min-width="120" align="center" >
                     </el-table-column>
-                     <el-table-column prop="orderSpecialist" label="订单专员" width="100" align="center" >
+                     <el-table-column prop="orderSpecialists" label="订单专员" width="100" align="center" >
                     </el-table-column>
                      <el-table-column  label="授权客户数" width="100" align="center" >
                           <template scope="scope">
@@ -41,16 +41,16 @@
                               <span v-html="scope.row.statusx"></span>
                         </template>
                     </el-table-column>
-                    <el-table-column label="操作"  width="570">
+                    <el-table-column label="操作"  width="490">
                         <template scope="scope">
                             <el-button size="mini" type="primary" @click="editUser(scope.row)" v-if="scope.row.status !='3'" >编辑</el-button>
                             <el-button size="mini" type="success" @click="enabled(scope.row,'1')" v-if="scope.row.status=='2'">启用</el-button>
                             <el-button size="mini" type="warning" @click="enabled(scope.row,'2')" v-if="scope.row.status=='1'">禁用</el-button>
                             <el-button size="mini" type="danger"  @click="enabled(scope.row,'3')" v-if="scope.row.status !='3'">删除</el-button>
                             <el-button size="mini" type="primary" @click="permission(scope.row)" v-if="scope.row.status !='3'">权限</el-button>
-                            <el-button size="mini" type="primary" @click="open" v-if="scope.row.status !='3'&&scope.row.orderSpecialist !='1'">取消订单专员</el-button>
-                            <el-button size="mini" type="primary" @click="open" v-if="scope.row.status !='3'&&scope.row.orderSpecialist !='0'">设置订单专员</el-button>
-                            <el-button size="mini" type="primary" @click="relieve(scope.row)" v-if="scope.row.status !='3'">授权客户</el-button>
+                            <el-button size="mini" type="primary" @click="setOredr(scope.row,'0')" v-if="scope.row.status !='3'&&scope.row.orderSpecialist =='1'">取消订单专员</el-button>
+                            <el-button size="mini" type="primary" @click="setOredr(scope.row,'1')" v-if="scope.row.status !='3'&&scope.row.orderSpecialist =='0'">设置订单专员</el-button>
+                            <el-button size="mini" type="primary" @click="auth(scope.row)" v-if="scope.row.status !='3'">授权客户</el-button>
                             <el-button size="mini" type="primary" @click="open">授权供应商</el-button>
                         </template>
                     </el-table-column>
@@ -59,8 +59,14 @@
             <el-col :span="24" class="toolbar">
                 <pagination :total="total" :pageSize="pageSize"  @change="getList"></pagination>
             </el-col>
+              <el-col :span="24" v-if="showsetOredr">
+                <order-specialist :showx.sync="showsetOredr" :useMsg="userMsg" :type="setOredrType" @refresh="getList"></order-specialist>
+            </el-col>  
             <el-col :span="24" v-if="showPermission">
-                <permission :showx.sync="showPermission" :useMsg="userMsg" @refresh="getList"></permission>
+                <permission :showx.sync="showPermission" :useMsg="userMsg" ></permission>
+            </el-col>  
+             <el-col :span="24" v-if="showauthHospital">
+                <auth-hospital :showx.sync="showauthHospital" :useMsg="userMsg"  @refresh="getList"></auth-hospital>
             </el-col>  
             <el-col :span="24" v-if="showaddUser">
                     <addUser  :showx.sync="showaddUser" :title="addTitle" :type="addType" :eidtUser="userMsg" @refresh="getList"></addUser>
@@ -75,7 +81,8 @@
 import pagination from '@/components/pagination';
 import addUser from './mods/addUser';  // 添加客户
 import permission from './mods/permission';  // 添加用户权限
-// import relieve from './components/relieve'; // 解除客户
+import orderSpecialist from './mods/orderSpecialist';  // 设置订单专员
+import authHospital from './mods/authHospital';  // 授权客户
 const URL = {
     PEOPLE_LIST: 'scm.enterprise.queryStaffList', // 查询员工列表
     STAFF: 'scm.enterprise.modValidateStaff' // 启用/停用/删除员工
@@ -91,6 +98,9 @@ export default {
             addType: false, // 添加用户类型
             showrelieveUser: false, // 显示解除用户
             relieveUserMsg: null, // 显示解除用户数据
+            setOredrType: null, // 设置订单专员类型
+            showsetOredr: null, // 设置订单专员是否显示
+            showauthHospital: null, // 设置授权客户是否显示
             total: 0,
             pageSize: 20,
             pageIndex: 1,
@@ -132,7 +142,7 @@ export default {
                             default:
                                 break;
                             }
-                            item.orderSpecialist = item.orderSpecialist === '1' ? '是' : '否';
+                            item.orderSpecialists = item.orderSpecialist === 1 ? '是' : '否';
                             return item;
                         });
                     } else {
@@ -187,10 +197,16 @@ export default {
             this.addType = 'add';
             this.showaddUser = true;
         },
-        // 解除用户
-        relieve (msg) {
-            this.showrelieveUser = true;
-            this.relieveUserMsg = {...msg, relieve: ''};// es7对象扩展
+        // 设置订单专员
+        setOredr (msg, type) {
+            this.setOredrType = type;
+            this.userMsg = {...msg};
+            this.showsetOredr = true;
+        },
+        // 授权客户
+        auth (msg) {
+            this.userMsg = {...msg};
+            this.showauthHospital = true;
         },
         // 重置
         reset () {
@@ -206,8 +222,9 @@ export default {
     components: {
         pagination,
         permission,
-        addUser
-        // relieve
+        addUser,
+        orderSpecialist,
+        authHospital
     }
 };
 

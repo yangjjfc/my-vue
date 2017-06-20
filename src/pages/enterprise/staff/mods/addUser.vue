@@ -1,7 +1,7 @@
 //添加客户
 <template>
     <section>
-        <dailog size="small" :show.sync="myshow" classx="staff-add-user"  title="title" @ok="quire">
+        <dailog size="small" :show.sync="myshow" classx="staff-add-user"  :title="title" @ok="quire">
             <el-form slot="content" :rules="rules" ref="forms" label-width="100px" class="demo-dynamic" :model="msgx">
                 <el-form-item label="登录账号" prop="loginAccount" >
                    <el-input placeholder="登录账号"  v-model="msgx.loginAccount" size="small" :disabled="this.type=='edit'"></el-input>

@@ -1,8 +1,8 @@
-//添加客户
+//设置权限
 <template>
     <section>
-        <dailog size="small" :show.sync="myshow" classx="" title="员工权限配置" @ok="quire">
-            <el-tree slot="content" :data="data2" show-checkbox node-key="id" :default-expand-all="true"  :default-checked-keys="defaultChecked" :props="defaultProps">
+        <dailog size="tiny" :show.sync="myshow" classx="" title="员工权限配置" @ok="quire">
+            <el-tree slot="content" :data="tree_data" ref="tree" show-checkbox node-key="id" :default-expand-all="true"  :default-checked-keys="defaultChecked" :props="defaultProps">
             </el-tree>
         </dailog>
     </section>
@@ -11,11 +11,10 @@
 <script>
 'use strict';
 const URL = {
+    RIGHTS_EDIT: 'ypt.open.right.updateUserRights', // 设置权限
     RIGHTS_LIST: 'ypt.open.right.findUserRights' // 所有可选权限
 };
 import dailog from '@/components/Dailog';
-import { mapGetters } from 'vuex';
-import { encryption, Validate } from '@/components/global.common';
 export default {
     name: 'staff-permission',
     props: {
@@ -28,29 +27,40 @@ export default {
     data () {
         return {
             myshow: false, // 是否显示弹框
-            data2: {
-
-            },
-            defaultProps: {
+            tree_data: {}, // 获取的数据
+            defaultProps: { // 默认props设置
                 children: 'children',
                 label: 'text'
             },
-            defaultChecked: []
+            defaultChecked: [] // 默认选择
         };
     },
     computed: {
-        ...mapGetters([
-            'userno',
-            'token',
-            'clientid'
-        ])
+        // 获取打钩的keys
+        getKeys () {
+            return this.$refs.tree.getCheckedKeys();
+        }
     },
     methods: {
         // 确认
         quire () {
-
+            this.Http.post(URL.RIGHTS_EDIT, {
+                userNo: this.useMsg.userNo,
+                appCode: 'YSCM',
+                rightIds: this.getKeys,
+                appRole: 'Supplier'
+            }).then(re => {
+                if (re.data === 'SUCCESS') {
+                    this.$notify({
+                        title: '成功',
+                        message: this.type === 'add' ? '添加成功' : '编辑成功',
+                        type: 'success'
+                    });
+                    this.myshow = false;
+                }
+            });
         },
-        // 确认
+        // 获取数据
         async getData () {
             await this.Http.post(URL.RIGHTS_LIST, {
                 userNo: this.useMsg.userNo,
@@ -58,11 +68,12 @@ export default {
                 appRole: 'Supplier'
             }).then((re) => {
                 if (re.data && re.data.length > 0) {
-                    this.data2 = re.data;
-                    this.formatChecked(this.data2);
+                    this.tree_data = re.data;
+                    this.formatChecked(this.tree_data);
                 }
             });
         },
+        // 遍历数据已选择的keys
         formatChecked (data) {
             let checked = [];
             let listChecked = (data) => {
@@ -77,7 +88,6 @@ export default {
             };
             listChecked(data);
             this.defaultChecked = checked;
-            console.log(this.defaultChecked);
         }
     },
     watch: {
