@@ -204,19 +204,18 @@ export default {
         //     this.HEIGHTRESIZE($height);
         // })();
     },
-
     created () {
-        this.useInfo;
+		// 判断用户是否登录
+        if (!this.useInfo) {
+            this.$router.push({ name: 'auth' });
+        }
     },
-
 	// F5刷新重新赋值
-
     computed: mapState({
         useInfo: function (state) {
             if (!state.userInfo) {
                 this.REFRESH();
             }
-
             return state.userInfo;
         }
     })

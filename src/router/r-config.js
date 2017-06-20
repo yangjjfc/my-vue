@@ -27,7 +27,7 @@ router.beforeEach((to, from, next) => {
             });
         }
     } else if (from.path === '/') {
-    // 用户刷新
+     // 用户刷新
         next();
     } else {
         next();
