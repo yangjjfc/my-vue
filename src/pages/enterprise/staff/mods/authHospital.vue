@@ -45,19 +45,19 @@ export default {
         quire () {
             this.Http.post(URL.ADD_AUTHORIY, {
                 params: {
-                    userNo: this.userMsg.userNo,
-                    enterpriseNoList: movedKeys
+                    userNo: this.userMsg.userNo
+                   // enterpriseNoList: movedKeys
                 }
             });
             this.Http.post(URL.DEL_AUTHORIY, {
                 params: {
-                    userNo: this.userMsg.userNo,
-                    enterpriseNo: movedKeys
+                    userNo: this.userMsg.userNo
+                 //   enterpriseNo: movedKeys
                 }
             });
         },
         change (value, direction, movedKeys) {
-            console.log(value, direction, movedKeys);
+           // console.log(value, direction, movedKeys);
         },
         // 获取数据
         async getData () {
@@ -100,7 +100,7 @@ export default {
             }
             this.data = msg;
             this.myshow = this.showx;
-        }).catch(e => console.log(e));
+        }).catch(err => { throw new Error(err); });
     },
     components: {
         dailog

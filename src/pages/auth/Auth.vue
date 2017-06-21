@@ -60,19 +60,19 @@ export default {
             'userLogin': 'login',
             'currentUser': 'currentUser'
         }),
+        // 刷新验证码
         refreshCode () {
             let config = CONFIG;
-            let self = this;
-            let getRandomImg = function () {
-                self.verifyImg = CONFIG.SERVER + URL.VERIFY_CODE + '?t=' + Math.round(Math.random() * 1000000);
+            let getRandomImg = () => {
+                this.verifyImg = CONFIG.SERVER + URL.VERIFY_CODE + '?t=' + Math.round(Math.random() * 1000000);
             };
             if (config.DEV_MODE === 1) { // 开发,需跨域
                 if (this.userInfo && this.userInfo.token) {
                     getRandomImg();
                 } else {
-                    self.currentUser().then(function () {
+                    this.currentUser().then(() => {
                         getRandomImg();
-                    }, function () {
+                    }, () => {
                         getRandomImg();
                     });
                 }
@@ -80,38 +80,38 @@ export default {
                 getRandomImg();
             }
         },
+        // 登录
         login () {
             let xflag = false;
-            let self = this;
             let clientid = this.userInfo ? this.userInfo.clientId : null;
             let token = this.userInfo ? this.userInfo.token : null;
-            let password = self.form.password;
-            if (!/^[a-zA-Z0-9_-]{6,20}$/.test(self.form.username)) {
+            let password = this.form.password;
+            if (!/^[a-zA-Z0-9_-]{6,20}$/.test(this.form.username)) {
                 xflag = true;
-                self.errorMsg = self.form.username === '' ? '请输入用户名' : '用户名格式不正确';
+                this.errorMsg = this.form.username === '' ? '请输入用户名' : '用户名格式不正确';
                 return;
             }
 
-            if (!/^[a-zA-Z0-9_-]{6,20}$/.test(self.form.password)) {
+            if (!/^[a-zA-Z0-9_-]{6,20}$/.test(this.form.password)) {
                 xflag = true;
-                self.errorMsg = self.form.password === '' ? '请输入密码' : '密码长度6-20个字符';
+                this.errorMsg = this.form.password === '' ? '请输入密码' : '密码长度6-20个字符';
                 return;
             }
-            if (!/^[a-zA-Z0-9]{4}$/.test(self.form.verifycode)) {
+            if (!/^[a-zA-Z0-9]{4}$/.test(this.form.verifycode)) {
                 xflag = true;
-                self.errorMsg = self.form.verifycode === '' ? '请输入验证码' : '验证码格式不正确';
+                this.errorMsg = this.form.verifycode === '' ? '请输入验证码' : '验证码格式不正确';
                 return;
             }
-            let param = Object.assign({}, self.form, {
+            let param = Object.assign({}, this.form, {
                 password: encryption(password, clientid, token)
             });
             if (!xflag) {
-                this.userLogin(param).then(function (msg) {
-                    self.$router.push({ name: 'charts' });
-                }, function (err) {
+                this.userLogin(param).then(msg => {
+                    this.$router.push({ name: 'charts' });
+                }, err => {
                     // 记录错误信息
-                    self.errorMsg = err.message;
-                    self.refreshCode();
+                    this.errorMsg = err.message;
+                    this.refreshCode();
                 });
             }
         }

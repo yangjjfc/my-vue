@@ -129,9 +129,9 @@
 </template>
 <script>
 import pagination from '@/components/pagination';
-import editUser from './components/editUser'; // 编辑
-import addUser from './components/addUser';  // 添加客户
-import relieve from './components/relieve'; // 解除客户
+import editUser from './mods/editUser'; // 编辑
+import addUser from './mods/addUser';  // 添加客户
+import relieve from './mods/relieve'; // 解除客户
 export default {
     name: 'customer-list',
     data () {

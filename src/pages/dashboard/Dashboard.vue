@@ -1,45 +1,26 @@
 <template>
 	<el-row class="container">
-	
 		<el-col :span="24" class="header">
-	
 			<el-col :span="10" class="logo ">
-	
 				{{sysName}}
-	
 			</el-col>
-	
 			<el-col :span="4" class="userinfo">
-	
 				<el-dropdown trigger="hover">
-	
 					<span class="el-dropdown-link userinfo-inner">
-	
 						<img :src="this.sysUserAvatar" /> {{sysUserName}}
-	
 					</span>
-	
 					<el-dropdown-menu slot="dropdown">
-	
 						<el-dropdown-item>我的消息</el-dropdown-item>
-	
 						<el-dropdown-item>设置</el-dropdown-item>
-	
 						<el-dropdown-item divided @click.native="logout">退出登录</el-dropdown-item>
-	
 					</el-dropdown-menu>
-	
 				</el-dropdown>
-	
 			</el-col>
-	
 		</el-col>
-	
 		<el-col :span="24" class="main">
-	
 			<aside :class="collapsed?'menu-collapsed':'menu-expanded'" class="sidebar el-menu--dark">
 				<el-scrollbar tag="div" class="scrollbar-box">
-					<el-menu :default-active="$route.path" class="el-menu-vertical-demo" unique-opened router v-show="!collapsed" theme="dark">
+					<el-menu :default-active="$route.path" class="el-menu-vertical-demo"  unique-opened router v-show="!collapsed" theme="dark">
 						<template v-for="(item,index) in menuList" v-if="!item.hidden">
 							<el-submenu :index="index+''" v-if="item.son&&item.son.length>0">
 								<template slot="title">
@@ -72,22 +53,22 @@
 							</template>
 						</li>
 					</ul>
-					</el-scrollbar>
-					<!--导航菜单-->
-					<div class="tools" @click.prevent="collapse">
-						<i :class="collapsed?'el-icon-d-arrow-right':'el-icon-d-arrow-left'"></i>
-					</div>
+				</el-scrollbar>
+				<!--导航菜单-->
+				<div class="tools" @click.prevent="collapse">
+					<i :class="collapsed?'el-icon-d-arrow-right':'el-icon-d-arrow-left'"></i>
+				</div>
 			</aside>
 			<section class="content-container">
 				<div class="grid-content bg-purple-light">
 					<!--<el-col :span="24" class="breadcrumb-container">
-											<strong class="title">{{$route.name}}</strong>
-											<el-breadcrumb separator="/" class="breadcrumb-inner">
-												<el-breadcrumb-item v-for="item in $route.matched" :key="item.path">
-													{{ item.name }}
-												</el-breadcrumb-item>
-											</el-breadcrumb>
-										</el-col>-->
+												<strong class="title">{{$route.name}}</strong>
+												<el-breadcrumb separator="/" class="breadcrumb-inner">
+													<el-breadcrumb-item v-for="item in $route.matched" :key="item.path">
+														{{ item.name }}
+													</el-breadcrumb-item>
+												</el-breadcrumb>
+											</el-col>-->
 					<el-col :span="24" class="content-wrapper">
 						<transition name="fade" mode="out-in">
 							<router-view></router-view>
@@ -100,84 +81,46 @@
 </template>
 
 <script>
-import MENU from '@/config/menu.js';
-
+import createMenu from '@/config/menu.js';
 import SweetAlert from '@/services/sweetalert';
-import {
-
-	mapState,
-
-	mapMutations,
-
-	mapActions
-
-} from 'vuex';
-
+import {mapState, mapMutations, mapActions} from 'vuex';
 // import CONFIG from '@/config/app.config';
-
 export default {
-
     data () {
         return {
-
-            sysName: '云供应链',
-
-            collapsed: false,
-
-            sysUserName: '',
-
-            menuList: MENU,
-
+            sysName: '云供应链', // title
+            collapsed: false, // 是否缩进
+            sysUserName: '', // 客户名称
+            menuList: '', // 菜单
             sysUserAvatar: ''
-
         };
     },
-
     methods: {
-
         ...mapMutations(['REFRESH', 'HEIGHTRESIZE']),
-
         ...mapActions({
-
-            'userLoginout': 'logout'
-
+            'userLoginout': 'logout',
+            'getroles': 'getroles'
         }),
-
-        logout: function () { /** 退出登 */
+		/** 退出登 */
+        logout: function () {
             var self = this;
             SweetAlert.confirm({
-
                 title: '确认退出吗',
-
                 cancelButtonText: '取消',
-
                 confirmButtonText: '确定',
-
                 width: '300px',
-
                 showCancelButton: true,
-
                 showLoaderOnConfirm: true,
-
                 allowOutsideClick: false,
-
                 preConfirm: function () {
                     return self.userLoginout();
                 }
-
             }).then(result => {
-                if (result.code === 'SUCCESS') {
-                    SweetAlert.success('操作成功');
-
-                    self.$router.push('/auth');
-                } else {
-                    SweetAlert.error('操作失败');
-                }
+                SweetAlert.success('操作成功');
+                self.$router.push('/auth');
             });
         },
-
 		// 折叠导航
-
         collapse () {
             this.collapsed = !this.collapsed;
             if (document.createEvent) {
@@ -188,35 +131,36 @@ export default {
                 window.fireEvent('onresize');
             }
         },
-
         showMenu (i, status) {
             this.$refs.menuCollapsed.getElementsByClassName('submenu-hook-' + i)[0].style.display = status ? 'block' : 'none';
         }
-
     },
-
     mounted () {
-        this.sysUserName = this.useInfo.enterpriseName;
+        this.sysUserName = this.states.userInfo.userName;
 		// this.sysUserAvatar = CONFIG.IMAGE_DOWNLOAD + User.msg.enterpriseLogo;
         this.sysUserAvatar = 'http://dfs.test.cloudyigou.com/dfs/s2/M00/25/39/rB4r9Vk3mwWAdctcAAFf5pjzdHU212_100x100.jpg';
-        // window.onresize = () => (() => {
-        //     let $height = document.body.clientHeight || document.documentElement.clientHeight;
-        //     this.HEIGHTRESIZE($height);
-        // })();
+		// window.onresize = () => (() => {
+		//     let $height = document.body.clientHeight || document.documentElement.clientHeight;
+		//     this.HEIGHTRESIZE($height);
+		// })();
     },
     created () {
 		// 判断用户是否登录
-        if (!this.useInfo) {
+        if (!this.states.userInfo) {
             this.$router.push({ name: 'auth' });
+        } else {
+            this.getroles().then(() => {
+                this.menuList = createMenu();
+            });
         }
     },
 	// F5刷新重新赋值
     computed: mapState({
-        useInfo: function (state) {
+        states: function (state) {
             if (!state.userInfo) {
                 this.REFRESH();
             }
-            return state.userInfo;
+            return state;
         }
     })
 

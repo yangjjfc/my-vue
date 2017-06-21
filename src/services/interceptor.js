@@ -19,7 +19,7 @@ class Interceptor {
                 } else {
                     typeof obj[i] === String && (obj[i] = obj[i].trim());
                     if (!obj.notClearValue && (obj[i] === undefined || obj[i] === null || obj[i] === '')) {
-                        delete obj[i];
+                       // delete obj[i];
                     }
                 }
             }

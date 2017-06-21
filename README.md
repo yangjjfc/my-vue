@@ -1,6 +1,6 @@
 # fed-vue2
 
-> 基于iView + vue2 的前端脚手架项目   
+> 基于ElementUi + vue2 + axios + vuex + vue-router 的前端脚手架项目   
 
 ## Build Setup
 
@@ -23,13 +23,22 @@ For detailed explanation on how things work, checkout the [guide](http://vuejs-t
 ## todo 要做的东西
 > 文件上传 + 预览   √
 
-> doshboard 主面板的布局，功能整合
+> doshboard 主面板的布局，功能整合 √
 
 > 表格树控件
 
 > 登录以及验证用户相关 √
 
-> 
+> 弹出框 daulog √
+
+> 时间组件 √
+
+> 地址组件 √
+
+> 分页组件 √
+
+> 权限控制 √
+
 
 ## eslint 代码检测工具
 在visual下使用时,在文件-设置-visualcode下修改报错后自动格式化文件
@@ -42,112 +51,65 @@ For detailed explanation on how things work, checkout the [guide](http://vuejs-t
 ├── build                                       // webpack配置文件
 ├── config                                      // 项目打包路径
 ├── elm                                         // 上线项目文件，放在服务器即可正常访问
-├── screenshots                                 // 项目截图
 ├── src                                         // 源码目录
+|   ├── assets                                  // 资源
+│   │   ├── images                              // 项目图片目录
+│   │   ├── js                                  // 第三方插件
+│   │   ├── style                               // 公共样式
 │   ├── components                              // 组件
-│   │   ├── common                              // 公共组件
-│   │   │   ├── alertTip.vue                    // 弹出框组件
-│   │   │   ├── buyCart.vue                     // 购物车组件
-│   │   │   ├── computeTime.vue                 // 倒计时组件
-│   │   │   ├── loading.vue                     // 页面初始化加载数据的动画组件
-│   │   │   ├── mixin.js                        // 组件混合(包括：指令-下拉加载更多，处理图片地址)
-│   │   │   ├── ratingStar.vue                  // 评论的五颗星组件
-│   │   │   └── shoplist.vue                    // msite和shop页面的餐馆列表公共组件
-│   │   ├── footer
-│   │   │   └── footGuide.vue                   // 底部公共组件
-│   │   └── header
-│   │       └── head.vue                        // 头部公共组件
+│   │   ├── Dailog.vue                          // 弹框组件
+│   │   ├── dataPicker.vue                      // 时间组件
+│   │   ├── FileUpload.vue                      // 图片上传组件
+│   │   ├── global.common.js                    // 公共的js方法
+│   │   ├── pagination.vue                      // 分页组件
+│   │   ├── address                             // 地址目录
+│   │   │   ├── ReginPicker.vue                 // 地址组件
 │   ├── config                                  // 基本配置
-│   │   ├── env.js                              // 环境切换配置
-│   │   ├── fetch.js                            // 获取数据
-│   │   ├── mUtils.js                           // 常用的js方法
-│   │   └── rem.js                              // px转换rem
-│   ├── images                                  // 公共图片
-│   ├── page
-│   │   ├── balance
-│   │   │   ├── balance.vue                     // 余额页
-│   │   │   └── children
-│   │   │       └── detail.vue                  // 余额说明
-│   │   ├── benefit
-│   │   │   ├── benefit.vue                     // 红包页
-│   │   │   └── children
-│   │   │       ├── commend.vue                 // 推荐有奖
-│   │   │       ├── coupon.vue                  // 代金券说明
-│   │   │       ├── exchange.vue                // 兑换红包
-│   │   │       ├── hbDescription.vue           // 红包说明
-│   │   │       └── hbHistory.vue               // 历史红包
-│   │   ├── city                 
-│   │   │   └── city.vue                        // 当前城市页
-│   │   ├── confirmOrder
-│   │   │   ├── children
-│   │   │   │   ├── children
-│   │   │   │   │   ├── addAddress.vue          // 添加地址页
-│   │   │   │   │   └── children
-│   │   │   │   │       └── searchAddress.vue   // 搜索地址页
-│   │   │   │   ├── chooseAddress.vue           // 选择地址页
-│   │   │   │   ├── invoice.vue                 // 选择发票页
-│   │   │   │   ├── payment.vue                 // 付款页
-│   │   │   │   ├── remark.vue                  // 订单备注页 
-│   │   │   │   └── userValidation.vue          // 用户验证页
-│   │   │   └── confirmOrder.vue                // 确认订单页
-│   │   ├── download
-│   │   │   └── download.vue                    // 下载App
-│   │   ├── find
-│   │   │   └── find.vue                        // 发现页
-│   │   ├── food
-│   │   │   └── food.vue                        // 食品筛选排序页
-│   │   ├── forget
-│   │   │   └── forget.vue                      // 忘记密码，修改密码页
-│   │   ├── home
-│   │   │   └── home.vue                        // 首页
-│   │   ├── login
-│   │   │   └── login.vue                       // 登录注册页
-│   │   ├── msite
-│   │   │   └── msite.vue                       // 商铺列表页
-│   │   ├── order
-│   │   │   ├── children
-│   │   │   │   └── orderDetail.vue             // 订单详情页
-│   │   │   └── order.vue                       // 订单列表页
-│   │   ├── points
-│   │   │   ├── children
-│   │   │   │   └── detail.vue                  // 积分说明
-│   │   │   └── points.vue                      // 积分页
-│   │   ├── profile
-│   │   │   ├── children
-│   │   │   │   ├── children
-│   │   │   │   │   ├── address.vue             // 添加地址
-│   │   │   │   │   └── children
-│   │   │   │   │       ├── add.vue             // 新增地址
-│   │   │   │   │       └── children
-│   │   │   │   │           └── addDetail.vue   // 搜索地址
-│   │   │   │   ├── info.vue                    // 帐户信息
-│   │   │   │   └── setusername.vue             // 重置用户名
-│   │   │   └── profile.vue                     // 个人中心
-│   │   ├── search
-│   │   │   └── search.vue                      // 搜索页
-│   │   ├── service
-│   │   │   ├── children
-│   │   │   │   └── questionDetail.vue          // 问题详情
-│   │   │   └── service.vue                     // 服务中心
-│   │   ├── shop
-│   │   │   ├── children
-│   │   │   │   ├── children
-│   │   │   │   │   └── shopSafe.vue            // 商铺认证信息页
-│   │   │   │   ├── foodDetail.vue              // 商铺信息页
-│   │   │   │   └── shopDetail.vue              // 单个商铺信息页
-│   │   │   └── shop.vue                        // 商铺筛选页
-│   │   └── vipcard
-│   │       ├── children
-│   │       │   ├── invoiceRecord.vue           // 购买记录
-│   │       │   ├── useCart.vue                 // 使用卡号购买
-│   │       │   └── vipDescription.vue          // 会员说明
-│   │       └── vipcard.vue                     // 会员卡办理页
-│   ├── plugins                                 // 引用的插件
+│   │   ├── app.config.js                       // 项目配置文件
+│   │   ├── menu.js                             // 菜单地址
+│   ├── directive                               // 自定义指令目录
+│   │   │   ├── vueDirective.vue                // 自定义指令
+│   ├── pages                                   // 页面
+│   │   ├── auth
+│   │   │   ├── auth.vue                        // 登录页面
+│   │   │   └── img                             // 登录页面相关图片
+│   │   ├── dashboard                          
+│   │   │   ├── dashboard.vue                   // 所有页面的父组件
+│   │   ├── echarts                 
+│   │   │   └── echarts.vue                     // index页
+│   │   ├── enterprise
+│   │   │   ├── account
+│   │   │   │   ├── account.vue                 // 账户管理页
+│   │   │   │   ├── mods
+│   │   │   │   │   ├── changeEmail.vue         // 更改邮箱
+│   │   │   │   │   └── changeName.vue          // 更改名字
+│   │   │   │   │   └── changePasswd.vue        // 更改密码
+│   │   │   │   │   └── changePhone.vue         // 更改电话
+│   │   │   │   │   └── viewDailog.vue          // 登入日志
+│   │   │   └── staff                           
+│   │   │   │   ├── staff.vue                   // 员工管理页
+│   │   │   │   ├── mods
+│   │   │   │   │   ├── addUser.vue             // 添加用户/编辑用户
+│   │   │   │   │   ├── authHospital.vue        // 启用/禁用
+│   │   │   │   │   ├── orderSpeciallist.vue    // 设置订单专员
+│   │   │   │   │   ├── permission.vue          // 设置权限
+│   │   ├── hospital
+│   │   │   └── customer-list                  
+│   │   │   │   ├── customer-list.vue           // 客户列表
+│   │   │   │   ├── mods
+│   │   │   │   │   ├── addUser.vue             // 添加用户
+│   │   │   │   │   ├── eidtUser.vue            // 编辑用户
+│   │   │   │   │   ├── relieve.vue             // 解除关系
+│   │   │   └── new-customer                  
+│   │   │   │   ├── new-customer.vue            // 新客户
 │   ├── router
+│   │   └── index.js                            // 配置组件路由
 │   │   └── router.js                           // 路由配置
 │   ├── service                                 // 数据交互统一调配
-│   │   ├── getData.js                          // 获取数据的统一调配文件，对接口进行统一管理
-│   │   └── tempdata                            // 开发阶段的临时数据
+│   │   ├── Http.js                             // axios配置
+│   │   └── interceptor.js                      // axios拦截器
+│   │   └── iview-config.js                     // iview配置
+│   │   └── sweetalert.js                       // alert2配置
 │   ├── store                                   // vuex的状态管理
 │   │   ├── action.js                           // 配置actions
 │   │   ├── getters.js                          // 配置getters
@@ -155,10 +117,6 @@ For detailed explanation on how things work, checkout the [guide](http://vuejs-t
 │   │   ├── modules                             // store模块
 │   │   ├── mutation-types.js                   // 定义常量muations名
 │   │   └── mutations.js                        // 配置mutations
-│   └── style
-│       ├── common.scss                         // 公共样式文件
-│       ├── mixin.scss                          // 样式配置文件
-│       └── swiper.min.css
 │   ├── App.vue                                 // 页面入口文件
 │   ├── main.js                                 // 程序入口文件，加载各种公共组件
 ├── favicon.ico                                 // 图标
