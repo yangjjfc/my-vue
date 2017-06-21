@@ -20,9 +20,9 @@
 		<el-col :span="24" class="main">
 			<aside :class="collapsed?'menu-collapsed':'menu-expanded'" class="sidebar el-menu--dark">
 				<el-scrollbar tag="div" class="scrollbar-box">
-					<el-menu :default-active="$route.path" class="el-menu-vertical-demo"  unique-opened router v-show="!collapsed" theme="dark">
+					<el-menu :default-active="$route.path" class="el-menu-vertical-demo" :default-openeds="opens" unique-opened router v-show="!collapsed" theme="dark">
 						<template v-for="(item,index) in menuList" v-if="!item.hidden">
-							<el-submenu :index="index+''" v-if="item.son&&item.son.length>0">
+							<el-submenu :index="index+''" v-if="item.son&&item.son.length>0" :key="index">
 								<template slot="title">
 									<i :class="item.icon"></i>{{item.name}}
 								</template>
@@ -92,7 +92,8 @@ export default {
             collapsed: false, // 是否缩进
             sysUserName: '', // 客户名称
             menuList: '', // 菜单
-            sysUserAvatar: ''
+            sysUserAvatar: '',
+            opens: []
         };
     },
     methods: {
@@ -143,6 +144,7 @@ export default {
 		//     let $height = document.body.clientHeight || document.documentElement.clientHeight;
 		//     this.HEIGHTRESIZE($height);
 		// })();
+        this.opens = ['2'];
     },
     created () {
 		// 判断用户是否登录
